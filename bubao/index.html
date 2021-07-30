@@ -171,7 +171,6 @@
                 moneys.children.forEach(obj => {
                     obj.position.y += 2;
                     if (obj.position.y >= 500) {
-												console.log(obj)
                         moneys.removeChild(obj);
                     }
                     //碰撞检测
@@ -184,7 +183,7 @@
 
                 //每隔一段时间，增加一個錢錢
                 create_money_time++;
-                if (create_money_time >= 25) {
+                if (create_money_time >= 50) {
                     money = new PIXI.Sprite(moneyTexture);
                     money.width = 50;
                     money.height = 50;
