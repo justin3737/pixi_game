@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="../pixi.min.js"></script>
+    <script src="../bump.js"></script>
     <style>
         * {
             margin: 0;
@@ -62,6 +63,11 @@
                 type = "canvas"
             }
             PIXI.utils.sayHello(type);
+
+            let b = new Bump(PIXI), //碰撞偵測
+            money,
+            moneys,
+            count_money = 0,        //計算得分
             app = new PIXI.Application({
                 width: 500,         // default: 800
                 height: 500,        // default: 600
@@ -93,6 +99,15 @@
                 player.vx = 0;
                 player.vy = 0;
 
+								//顯示賺了多少錢
+                const style = new PIXI.TextStyle({
+                    fontSize: 20,
+                    fill: "white"
+                });
+                numberText = new PIXI.Text('0',style);
+                numberText.position.x = 30;
+                numberText.position.y = 30;
+                app.stage.addChild(numberText);
 
                 //錢錢
                 moneyTexture = PIXI.Texture.from("../images/money.png");
@@ -155,8 +170,15 @@
                 //產生很多的錢錢
                 moneys.children.forEach(obj => {
                     obj.position.y += 2;
-                    if (obj.position >= 500) {
-                        moneys.removeChild(objs);
+                    if (obj.position.y >= 500) {
+												console.log(obj)
+                        moneys.removeChild(obj);
+                    }
+                    //碰撞检测
+                    if (b.hitTestCircle(obj, player, true)) {
+                        moneys.removeChild(obj);
+                        count_money += 1
+												numberText.text=count_money;
                     }
                 });
 
