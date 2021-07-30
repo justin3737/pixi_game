@@ -149,6 +149,12 @@
                 return Math.floor(Math.random() * (max - min)) + min
             }
 
+            function getRandomInt(min, max) {
+              min = Math.ceil(min);
+              max = Math.floor(max);
+              return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+            }
+
             function update() {
                 player.position.x += player.vx;
                 player.position.y += player.vy;
@@ -169,7 +175,7 @@
 
                 //產生很多的錢錢
                 moneys.children.forEach(obj => {
-                    obj.position.y += 2;
+                    obj.position.y += getRandomInt(2,6);
                     if (obj.position.y >= 500) {
                         moneys.removeChild(obj);
                     }
