@@ -99,6 +99,7 @@
                 player.vx = 0;
                 player.vy = 0;
                 player.interactive = true;
+                player.buttonMode = true;
                 player.dragging = false;
                 player.on('pointerdown', onDragStart)
                 player.on('pointermove', onDragMove)
@@ -211,21 +212,18 @@
             }
 
             function onDragStart(e) {
-              console.log('Picked up');
-              player.x = e.data.global.x;
+              player.x = e.data.global.x - player.width/2;
               player.dragging = true;
             }
 
             function onDragMove(e) {
-              console.log('Dragging');
               if (player.dragging) {
-                player.x = e.data.global.x;
+                player.x = e.data.global.x - player.width/2;
               }
             }
 
             function onDragEnd(e) {
-              console.log('Moving');
-              player.x = e.data.global.x;
+              player.x = e.data.global.x - player.width/2;
               player.dragging = false;
             }
         }
