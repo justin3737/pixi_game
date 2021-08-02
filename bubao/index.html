@@ -14,8 +14,8 @@
 
         .box {
             margin: 0 auto;
-            width: 500px;
-            height: 500px;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
@@ -68,9 +68,12 @@
             money,
             moneys,
             count_money = 0,        //計算得分
+            screenWidth = window.innerWidth,    //螢幕寬
+            screenHeight = window.innerHeight,  //螢幕高
+            playerMoveSpeed = 10,               //玩家鍵盤速度
             app = new PIXI.Application({
-                width: 500,         // default: 800
-                height: 500,        // default: 600
+                width: screenWidth,
+                height: screenHeight,
                 antialias: true,    // default: false
                 transparent: false, // default: false
                 resolution: 1       // default: 1
@@ -94,8 +97,8 @@
                 player.circular = true;
                 player.width = 80;
                 player.height = 80;
-                player.position.x = (500 - 80) / 2;
-                player.position.y = 500 - 80;
+                player.position.x = (screenWidth - 80) / 2;
+                player.position.y = screenHeight - 80 - 20;
                 player.vx = 0;
                 player.vy = 0;
                 player.interactive = true;
@@ -122,6 +125,8 @@
                 //錢錢容器
                 moneys = new PIXI.Container();
                 app.stage.addChild(moneys);
+                //錢錢容器的x軸
+                moneys.x = screenWidth < 414 ? screenWidth : ((screenWidth - 600)/2)
 
                 app.stage.addChild(player);
                 //鍵盤事件
@@ -130,7 +135,7 @@
                 var right = keyboard(39);
                 var down = keyboard(40);
                 left.press = () => {
-                    player.vx = -4;
+                    player.vx = -playerMoveSpeed;
                     player.vy = 0;
                 };
                 left.release = () => {
@@ -139,7 +144,7 @@
                 };
 
                 right.press = () => {
-                    player.vx = 4;
+                    player.vx = playerMoveSpeed;
                     player.vy = 0;
                 };
                 right.release = () => {
@@ -171,20 +176,20 @@
                 if(player.position.x<=0){
                    player.position.x=0;
                 }
-                if(player.position.x>=500-player.width){
-                   player.position.x=500-player.width;
+                if(player.position.x>=screenWidth-player.width){
+                   player.position.x=screenWidth-player.width;
                 }
                 if(player.position.y<=0){
                    player.position.y=0;
                 }
-                if(player.position.y>=500-player.height){
-                   player.position.y=500-player.height;
+                if(player.position.y>=screenHeight-player.height){
+                   player.position.y=screenHeight-player.height;
                 }
 
                 //產生很多的錢錢
                 moneys.children.forEach(obj => {
                     obj.position.y += getRandomInt(2,6);
-                    if (obj.position.y >= 500) {
+                    if (obj.position.y >= screenHeight) {
                         moneys.removeChild(obj);
                     }
                     //碰撞检测
