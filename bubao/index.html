@@ -27,213 +27,250 @@
 </body>
     <script type="text/javascript">
         function keyboard(keyCode) {
-            let key = {};
-            key.code = keyCode;
-            key.isDown = false;
-            key.isUp = true;
-            key.press = undefined;
-            key.release = undefined;
-            //The `downHandler`
-            key.downHandler = event => {
-                if (event.keyCode === key.code) {
-                    if (key.isUp && key.press) key.press();
-                    key.isDown = true;
-                    key.isUp = false;
-                }
-                event.preventDefault();
-            };
-            //The `upHandler`
-            key.upHandler = event => {
-                if (event.keyCode === key.code) {
-                    if (key.isDown && key.release) key.release();
-                    key.isDown = false;
-                    key.isUp = true;
-                }
-                event.preventDefault();
-            };
-            //Attach event listeners
-            window.addEventListener(
-                "keydown", key.downHandler.bind(key), false
-            );
-            window.addEventListener(
-                "keyup", key.upHandler.bind(key), false
-            );
-            return key;
+          let key = {};
+          key.code = keyCode;
+          key.isDown = false;
+          key.isUp = true;
+          key.press = undefined;
+          key.release = undefined;
+          //The `downHandler`
+          key.downHandler = event => {
+            if (event.keyCode === key.code) {
+                if (key.isUp && key.press) key.press();
+                key.isDown = true;
+                key.isUp = false;
+            }
+            event.preventDefault();
+          };
+          //The `upHandler`
+          key.upHandler = event => {
+            if (event.keyCode === key.code) {
+              if (key.isDown && key.release) key.release();
+              key.isDown = false;
+              key.isUp = true;
+            }
+            event.preventDefault();
+          };
+          //Attach event listeners
+          window.addEventListener(
+            "keydown", key.downHandler.bind(key), false
+          );
+          window.addEventListener(
+            "keyup", key.upHandler.bind(key), false
+          );
+          return key;
         }
+
         function init() {
-            let type = "WebGL"
-            if (!PIXI.utils.isWebGLSupported()) {
-                type = "canvas"
-            }
-            PIXI.utils.sayHello(type);
+          let type = "WebGL"
+          if (!PIXI.utils.isWebGLSupported()) {
+              type = "canvas"
+          }
+          PIXI.utils.sayHello(type);
 
-            let b = new Bump(PIXI), //碰撞偵測
-            money,
-            moneys,
-            count_money = 0,        //計算得分
-            screenWidth = window.innerWidth,    //螢幕寬
-            screenHeight = window.innerHeight,  //螢幕高
-            playerMoveSpeed = 10,               //玩家鍵盤速度
-            app = new PIXI.Application({
-                width: screenWidth,
-                height: screenHeight,
-                antialias: true,    // default: false
-                transparent: false, // default: false
-                resolution: 1       // default: 1
+          let b = new Bump(PIXI), //碰撞偵測
+          money,
+          moneys,
+          count_money = 0,        //計算得分
+          screenWidth = window.innerWidth,    //螢幕寬
+          screenHeight = window.innerHeight,  //螢幕高
+          playerMoveSpeed = 10,               //玩家鍵盤速度
+          bubaoSp,
+          bubao_old_x = 0,
+          bubaoScale = 0.5,
+          app = new PIXI.Application({
+            width: screenWidth,
+            height: screenHeight,
+            antialias: true,    // default: false
+            transparent: false, // default: false
+            resolution: 1       // default: 1
+          });
+          app.renderer.backgroundColor = 0xde54a9;
+          document.getElementById('box').appendChild(app.view);
+
+          PIXI.loader
+            .add([
+                "../images/bubao_1.png",
+                "../images/bubao_2.png",
+                "../images/bubao_3.png",
+                "../images/bubao_4.png",
+                "../images/point.png"
+            ])
+            .on("progress", loadProgressHandler)
+            .load(setup);
+          function loadProgressHandler(loader, resource) {
+            console.log("loading: " + resource.url);
+            console.log("progress: " + loader.progress + "%");
+          }
+          function setup() {
+            //建立布寶動畫
+            CreateAnimatedSp();
+
+            //顯示賺了多少錢
+            const style = new PIXI.TextStyle({
+                fontSize: 20,
+                fill: "white"
             });
-            app.renderer.backgroundColor = 0xde54a9;
-            document.getElementById('box').appendChild(app.view);
-            PIXI.loader
-                .add([
-                    "../images/bunny.png",
-                    "../images/money.png"
-                ])
-                .on("progress", loadProgressHandler)
-                .load(setup);
-            function loadProgressHandler(loader, resource) {
-                console.log("loading: " + resource.url);
-                console.log("progress: " + loader.progress + "%");
+            numberText = new PIXI.Text('0',style);
+            numberText.position.x = 30;
+            numberText.position.y = 30;
+            app.stage.addChild(numberText);
+
+            //錢錢
+            moneyTexture = PIXI.Texture.from("../images/point.png");
+            //錢錢容器
+            moneys = new PIXI.Container();
+            app.stage.addChild(moneys);
+            //錢錢容器的x軸
+            moneys.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2)
+
+            //鍵盤事件
+            var left = keyboard(37);
+            var up = keyboard(38);
+            var right = keyboard(39);
+            var down = keyboard(40);
+            left.press = () => {
+              bubaoSp.vx = - playerMoveSpeed;
+              bubaoSp.vy = 0;
+              setDirection('left')
+            };
+            left.release = () => {
+              bubaoSp.vx = 0;
+              bubaoSp.vy = 0;
+            };
+
+            right.press = () => {
+              bubaoSp.vx = playerMoveSpeed;
+              bubaoSp.vy = 0;
+              setDirection('right')
+            };
+            right.release = () => {
+              bubaoSp.vx = 0;
+              bubaoSp.vy = 0;
+            };
+
+            //創建錢錢的time
+            create_money_time=0;
+
+            requestAnimationFrame(update);
+          }
+
+          function r(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min
+          }
+
+          function update() {
+            bubaoSp.position.x += bubaoSp.vx;
+            bubaoSp.position.y += bubaoSp.vy;
+
+            //避免超出畫布
+            if (bubaoSp.position.x<=0) {
+                bubaoSp.position.x=0;
             }
-            function setup() {
-                var playerTexture = PIXI.Texture.from("../images/bunny.png");
-                player = new PIXI.Sprite(playerTexture);
-                player.circular = true;
-                player.width = 80;
-                player.height = 80;
-                player.position.x = (screenWidth - 80) / 2;
-                player.position.y = screenHeight - 80 - 20;
-                player.vx = 0;
-                player.vy = 0;
-                player.interactive = true;
-                player.buttonMode = true;
-                player.dragging = false;
-                player.on('pointerdown', onDragStart)
-                player.on('pointermove', onDragMove)
-                player.on('pointerup', onDragEnd)
-                player.on('pointerupoutside', onDragEnd);
-
-
-								//顯示賺了多少錢
-                const style = new PIXI.TextStyle({
-                    fontSize: 20,
-                    fill: "white"
-                });
-                numberText = new PIXI.Text('0',style);
-                numberText.position.x = 30;
-                numberText.position.y = 30;
-                app.stage.addChild(numberText);
-
-                //錢錢
-                moneyTexture = PIXI.Texture.from("../images/money.png");
-                //錢錢容器
-                moneys = new PIXI.Container();
-                app.stage.addChild(moneys);
-                //錢錢容器的x軸
-                moneys.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2)
-
-                app.stage.addChild(player);
-                //鍵盤事件
-                var left = keyboard(37);
-                var up = keyboard(38);
-                var right = keyboard(39);
-                var down = keyboard(40);
-                left.press = () => {
-                    player.vx = -playerMoveSpeed;
-                    player.vy = 0;
-                };
-                left.release = () => {
-                    player.vx = 0;
-                    player.vy = 0;
-                };
-
-                right.press = () => {
-                    player.vx = playerMoveSpeed;
-                    player.vy = 0;
-                };
-                right.release = () => {
-                    player.vx = 0;
-                    player.vy = 0;
-                };
-
-                //創建錢錢的time
-                create_money_time=0;
-
-                requestAnimationFrame(update);
+            if (bubaoSp.position.x>=screenWidth-bubaoSp.width) {
+                bubaoSp.position.x=screenWidth-bubaoSp.width;
+            }
+            if (bubaoSp.position.y<=0) {
+                bubaoSp.position.y=0;
+            }
+            if (bubaoSp.position.y>=screenHeight-bubaoSp.height) {
+              bubaoSp.position.y=screenHeight-bubaoSp.height;
             }
 
-            function r(min, max) {
-                return Math.floor(Math.random() * (max - min)) + min
-            }
-
-            function getRandomInt(min, max) {
-              min = Math.ceil(min);
-              max = Math.floor(max);
-              return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
-            }
-
-            function update() {
-                player.position.x += player.vx;
-                player.position.y += player.vy;
-
-                //避免超出畫布
-                if(player.position.x<=0){
-                   player.position.x=0;
-                }
-                if(player.position.x>=screenWidth-player.width){
-                   player.position.x=screenWidth-player.width;
-                }
-                if(player.position.y<=0){
-                   player.position.y=0;
-                }
-                if(player.position.y>=screenHeight-player.height){
-                   player.position.y=screenHeight-player.height;
-                }
-
-                //錢錢forEach處理
-                moneys.children.forEach(obj => {
-                    obj.position.y += getRandomInt(2,6);
-                    if (obj.position.y >= screenHeight) {
-                        moneys.removeChild(obj);
-                    }
-                    //碰撞检测
-                    if (b.hitTestCircle(obj, player, true)) {
-                        moneys.removeChild(obj);
-                        count_money += 1
-												numberText.text=count_money;
-                    }
-                });
-
-                //每隔一段时间，增加一個錢錢
-                create_money_time++;
-                if (create_money_time >= 50) {
-                    money = new PIXI.Sprite(moneyTexture);
-                    money.width = 50;
-                    money.height = 50;
-                    money.position.x = r(0, 512);
-                    money.position.y = 0;
-                    money.circular = true;
-                    moneys.addChild(money);
-                    create_money_time = 0;
-                }
-
-                requestAnimationFrame(update);
-            }
-
-            function onDragStart(e) {
-              player.x = e.data.global.x - player.width/2;
-              player.dragging = true;
-            }
-
-            function onDragMove(e) {
-              if (player.dragging) {
-                player.x = e.data.global.x - player.width/2;
+            //錢錢forEach處理
+            moneys.children.forEach(obj => {
+              obj.position.y += 4;
+              if (obj.position.y >= screenHeight) {
+                  moneys.removeChild(obj);
               }
+              //碰撞检测
+              if (b.hitTestCircle(obj, bubaoSp, true)) {
+                  moneys.removeChild(obj);
+                  count_money += 1
+                  numberText.text=count_money;
+              }
+            });
+
+            //每隔一段时间，增加一個錢錢
+            create_money_time++;
+            if (create_money_time >= 50) {
+              money = new PIXI.Sprite(moneyTexture);
+              money.width = 50;
+              money.height = 50;
+              money.position.x = r(0, 512);
+              money.position.y = 0;
+              money.circular = true;
+              moneys.addChild(money);
+              create_money_time = 0;
             }
 
-            function onDragEnd(e) {
-              player.x = e.data.global.x - player.width/2;
-              player.dragging = false;
+            requestAnimationFrame(update);
+          }
+
+          function onDragStart(e) {
+            bubaoSp.x = e.data.global.x - bubaoSp.width/2;
+            bubaoSp.dragging = true;
+          }
+
+          function onDragMove(e) {
+            if (bubaoSp.dragging) {
+              bubaoSp.x = e.data.global.x - bubaoSp.width/2;
+              if (bubao_old_x -  e.data.global.x > 0) {
+                setDirection('right')
+              } else {
+                setDirection('left')
+              }
+              bubao_old_x = e.data.global.x;
             }
+          }
+
+          function onDragEnd(e) {
+            bubaoSp.x = e.data.global.x - bubaoSp.width/2;
+            bubaoSp.dragging = false;
+          }
+
+          function CreateAnimatedSp() {
+            let bubaoImages = ["../images/bubao_1.png","../images/bubao_2.png","../images/bubao_3.png","../images/bubao_4.png"];
+            let textureArray = [];
+
+            for (let i=0; i < bubaoImages.length; i++)
+            {
+              let texture = PIXI.Texture.from(bubaoImages[i]);
+              textureArray.push(texture);
+            };
+
+            bubaoSp = new PIXI.AnimatedSprite(textureArray);
+
+            app.stage.addChild(bubaoSp);
+            bubaoSp.play();
+            app.ticker.add((delta) => {
+              bubaoSp.animationSpeed = 0.1;
+            })
+
+            bubaoSp.anchor.x = 0.5;
+            bubaoSp.circular = true;
+            bubaoSp.width = 120;
+            bubaoSp.height = 120;
+            bubaoSp.position.x = (screenWidth - 120) / 2;
+            bubaoSp.position.y = screenHeight - 120 - 20;
+            bubaoSp.vx = 0;
+            bubaoSp.vy = 0;
+            bubaoSp.interactive = true;
+            bubaoSp.buttonMode = true;
+            bubaoSp.dragging = false;
+            bubaoSp.on('pointerdown', onDragStart)
+            bubaoSp.on('pointermove', onDragMove)
+            bubaoSp.on('pointerup', onDragEnd)
+            bubaoSp.on('pointerupoutside', onDragEnd);
+          }
+
+          function setDirection(dir) {
+            if (dir === 'left') {
+              bubaoSp.scale.x = bubaoScale * -1
+            } else {
+              bubaoSp.scale.x = bubaoScale * 1
+            }
+          }
         }
     </script>
 </html>
