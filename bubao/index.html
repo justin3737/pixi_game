@@ -6,6 +6,9 @@
     <title>Document</title>
     <script src="../pixi.min.js"></script>
     <script src="../bump.js"></script>
+    <!-- use pixi-legacy for unsupported webGL's phone ex: Samsung GALAXY J7
+    <script src="../pixi-legacy.min.js"></script>
+    -->
     <style>
         * {
             margin: 0;
@@ -186,7 +189,7 @@
                    player.position.y=screenHeight-player.height;
                 }
 
-                //產生很多的錢錢
+                //錢錢forEach處理
                 moneys.children.forEach(obj => {
                     obj.position.y += getRandomInt(2,6);
                     if (obj.position.y >= screenHeight) {
