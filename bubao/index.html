@@ -133,20 +133,24 @@
               bubaoSp.vx = - playerMoveSpeed;
               bubaoSp.vy = 0;
               setDirection('left')
+              bubaoSp.play();
             };
             left.release = () => {
               bubaoSp.vx = 0;
               bubaoSp.vy = 0;
+              bubaoSp.stop();
             };
 
             right.press = () => {
               bubaoSp.vx = playerMoveSpeed;
               bubaoSp.vy = 0;
               setDirection('right')
+              bubaoSp.play();
             };
             right.release = () => {
               bubaoSp.vx = 0;
               bubaoSp.vy = 0;
+              bubaoSp.stop();
             };
 
             //創建錢錢的time
@@ -164,16 +168,16 @@
             bubaoSp.position.y += bubaoSp.vy;
 
             //避免超出畫布
-            if (bubaoSp.position.x<=0) {
-                bubaoSp.position.x=0;
+            if (bubaoSp.position.x <= 0) {
+              bubaoSp.position.x = bubaoSp.width/2;
             }
-            if (bubaoSp.position.x>=screenWidth-bubaoSp.width) {
-                bubaoSp.position.x=screenWidth-bubaoSp.width;
+            if (bubaoSp.position.x >= screenWidth) {
+              bubaoSp.position.x = screenWidth-bubaoSp.width/2;
             }
-            if (bubaoSp.position.y<=0) {
-                bubaoSp.position.y=0;
+            if (bubaoSp.position.y <=0 ) {
+              bubaoSp.position.y = 0;
             }
-            if (bubaoSp.position.y>=screenHeight-bubaoSp.height) {
+            if (bubaoSp.position.y >= screenHeight-bubaoSp.height) {
               bubaoSp.position.y=screenHeight-bubaoSp.height;
             }
 
@@ -210,6 +214,7 @@
           function onDragStart(e) {
             bubaoSp.x = e.data.global.x - bubaoSp.width/2;
             bubaoSp.dragging = true;
+            bubaoSp.play();
           }
 
           function onDragMove(e) {
@@ -227,6 +232,7 @@
           function onDragEnd(e) {
             bubaoSp.x = e.data.global.x - bubaoSp.width/2;
             bubaoSp.dragging = false;
+            bubaoSp.stop();
           }
 
           function CreateAnimatedSp() {
@@ -242,10 +248,6 @@
             bubaoSp = new PIXI.AnimatedSprite(textureArray);
 
             app.stage.addChild(bubaoSp);
-            bubaoSp.play();
-            app.ticker.add((delta) => {
-              bubaoSp.animationSpeed = 0.1;
-            })
 
             bubaoSp.anchor.x = 0.5;
             bubaoSp.circular = true;
@@ -262,6 +264,10 @@
             bubaoSp.on('pointermove', onDragMove)
             bubaoSp.on('pointerup', onDragEnd)
             bubaoSp.on('pointerupoutside', onDragEnd);
+
+            app.ticker.add((delta) => {
+              bubaoSp.animationSpeed = 0.2
+            })
           }
 
           function setDirection(dir) {
