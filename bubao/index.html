@@ -216,9 +216,9 @@
             if (bubaoSp.dragging) {
               bubaoSp.x = e.data.global.x - bubaoSp.width/2;
               if (bubao_old_x -  e.data.global.x > 0) {
-                setDirection('right')
+                setDirection('left');
               } else {
-                setDirection('left')
+                setDirection('right');
               }
               bubao_old_x = e.data.global.x;
             }
