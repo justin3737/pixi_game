@@ -15,6 +15,7 @@
 	<script>
     function getAccel(){
       if(window.DeviceOrientationEvent) {
+        document.getElementById('accelPermsButton').style.display = 'block';
         DeviceMotionEvent.requestPermission().then(response => {
           if (response == 'granted') {
             document.getElementById('accelPermsButton').style.display = 'none';
@@ -63,6 +64,10 @@
 
   #info a:hover {
     color: #6df;
+  }
+
+  #accelPermsButton{
+    display: none;
   }
   </style>
   <button id="accelPermsButton" onclick="getAccel()" style="height:50px;">Get Accelerometer Permissions</button>
