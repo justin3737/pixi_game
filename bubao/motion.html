@@ -24,7 +24,7 @@
 </body>
 <script>
 function getAccel(){
-  if(window.DeviceOrientationEvent) {
+  if(window.DeviceMotionEvent) {
     document.getElementById('accelPermsButton').style.display = 'block';
     DeviceMotionEvent.requestPermission().then(response => {
       if (response == 'granted') {
