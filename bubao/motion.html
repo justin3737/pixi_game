@@ -10,9 +10,6 @@
     line-height:100px;
     font-weight:bold;
   }
-  #accelPermsButton{
-    display: none;
-  }
   </style>
 </head>
 <body>
@@ -25,7 +22,6 @@
 <script>
 function getAccel(){
   if(window.DeviceMotionEvent) {
-    document.getElementById('accelPermsButton').style.display = 'block';
     DeviceMotionEvent.requestPermission().then(response => {
       if (response == 'granted') {
         document.getElementById('accelPermsButton').style.display = 'none';
