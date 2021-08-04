@@ -104,6 +104,7 @@
     if(window.DeviceOrientationEvent) {
       DeviceMotionEvent.requestPermission().then(response => {
         if (response == 'granted') {
+          document.getElementById('accelPermsButton').style.display = 'none';
           if(window.DeviceOrientationEvent) {
             window.addEventListener('deviceorientation', function(event) {
             var alpha = event.alpha,
