@@ -52,7 +52,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">1.9</span><br/>
+      版本:<span id="version">1.09</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -75,13 +75,13 @@
                       dirText = document.getElementById('dirText'),
                       speedText = document.getElementById('speedText'),
                       logText = document.getElementById('logText'),
-                      alpha = event.alpha,
-                      beta = event.beta,
-                      gamma = event.gamma;
+                      alpha = Math.round(event.alpha),
+                      beta = Math.round(event.beta),
+                      gamma = Math.round(event.gamma);
 
-                  a.innerHTML = Math.round(alpha);
-                  b.innerHTML = Math.round(beta);
-                  g.innerHTML = Math.round(gamma);
+                  a.innerHTML = alpha;
+                  b.innerHTML = beta;
+                  g.innerHTML = gamma;
 
                   if(gamma - old_gamma > 0) {
                     dirText.innerHTML = '右';
@@ -90,9 +90,6 @@
                     dirText.innerHTML = '左';
                     bubaoSp.setDirection('left')
                   }
-
-                  logText.innerHTML += 'gamma: '+ gamma +'</br>'
-                  logText.innerHTML += 'old_gamma: '+ old_gamma +'</br>'
 
                   if (gamma == old_gamma){
                     bubaoSp.vx += 0;
