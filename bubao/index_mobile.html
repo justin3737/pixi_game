@@ -47,15 +47,15 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">1.1</span><br/>
+      版本:<span id="version">1.2</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
     <script type="text/javascript">
         let bubaoSp,              //布寶實體物件
           bubaoMobileSpeed = 2.5, //布寶手機陀螺儀控制移動速度
-          old_alpha,
-          old_gamma;
+          old_alpha = 0,
+          old_gamma = 0;
 
         function getAccel() {
           if(window.DeviceOrientationEvent) {
@@ -77,10 +77,10 @@
                   b.innerHTML = Math.round(beta);
                   g.innerHTML = Math.round(gamma);
 
-                  if(old_gamma && (gamma - old_gamma) > 0) {
+                  if(gamma - old_gamma > 0) {
                     dirText.innerHTML = '右';
                     setDirection('right');
-                  } else if (old_gamma && (gamma - old_gamma) < 0) {
+                  } else if (gamma - old_gamma < 0) {
                     dirText.innerHTML = '左';
                     setDirection('left');
                   }
@@ -91,15 +91,14 @@
                   if (old_gamma && (gamma != old_gamma)) {
                     bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
                     speedText.innerHTML = (gamma - old_gamma) / bubaoMobileSpeed;
-                    //bubaoSp.play();
+                    bubaoSp.play();
                   } else {
-                    //bubaoSp.stop();
+                    bubaoSp.stop();
                   }
 
                   old_alpha = alpha;
                   old_gamma = gamma;
 
-                  logText.innerHTML += 'old_gamma: ' + old_gamma + '<br/>';
                 }, false);
               }
             });
