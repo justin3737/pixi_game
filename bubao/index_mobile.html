@@ -71,11 +71,15 @@
                   b.innerHTML = Math.round(beta);
                   g.innerHTML = Math.round(gamma);
 
-                  if(old_gamma && old_gamma < gamma) {
+                  if(old_gamma && gamma > 0) {
                     dirText.innerHTML = '右';
-                  } else if (old_gamma && old_gamma > gamma) {
+
+                  } else if (old_gamma && gamma < 0) {
                     dirText.innerHTML = '左';
                   }
+
+                  if(old_gamma)
+                    bubaoSp.vx += old_gamma - gamma;
 
                   old_alpha = alpha;
                   old_gamma = gamma;
