@@ -85,13 +85,15 @@
                     //setDirection('left');
                   }
 
-                  if (gamma != old_gamma){
+                  if (gamma == old_gamma){
+                    logTextt.innerHTML += '0</br>';
+                    bubaoSp.vx += 0;
+                    //bubaoSp.stop();
+                  } else if (gamma != old_gamma){
+                    logTextt.innerHTML += '1</br>';
                     bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
                     speedText.innerHTML = (gamma - old_gamma) / bubaoMobileSpeed;
                     //bubaoSp.play();
-                  } else if (gamma == old_gamma){
-                    bubaoSp.vx += 0;
-                    //bubaoSp.stop();
                   }
 
                   old_alpha = alpha;
