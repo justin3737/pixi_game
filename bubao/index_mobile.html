@@ -50,7 +50,7 @@
 </body>
     <script type="text/javascript">
         let bubaoSp,              //布寶實體物件
-          bubaoMobileSpeed = 2.2, //布寶手機陀螺儀控制移動速度
+          bubaoMobileSpeed = 2.5, //布寶手機陀螺儀控制移動速度
           old_alpha,
           old_gamma;
 
@@ -74,13 +74,13 @@
 
                   if(old_gamma && (gamma - old_gamma) > 0) {
                     dirText.innerHTML = '右';
-                    //setDirection('right');
+                    setDirection('right');
                   } else if (old_gamma && (gamma - old_gamma) < 0) {
                     dirText.innerHTML = '左';
-                    //setDirection('left');
+                    setDirection('left');
                   }
 
-                  if (old_gamma && (gamma - old_gamma) != 0)
+                  if (old_gamma && (gamma != old_gamma))
                     bubaoSp.vx += (gamma - old_gamma)/bubaoMobileSpeed;
 
                   old_alpha = alpha;
