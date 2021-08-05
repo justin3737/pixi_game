@@ -47,7 +47,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">1.6</span><br/>
+      版本:<span id="version">1.7</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -76,6 +76,9 @@
                   a.innerHTML = Math.round(alpha);
                   b.innerHTML = Math.round(beta);
                   g.innerHTML = Math.round(gamma);
+
+                  logText.innerHTML = typeof bubaoSp.setDirection + '</br>'
+                  logText.innerHTML = bubaoSp.setDirection + '</br>'
 
                   if(gamma - old_gamma > 0) {
                     dirText.innerHTML = '右';
