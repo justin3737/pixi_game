@@ -45,9 +45,12 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
+      方向:<span id="dirText"></span><br/>
     </div>
 </body>
     <script type="text/javascript">
+        var bubaoSp;  //布寶實體物件
+
         function getAccel() {
           if(window.DeviceOrientationEvent) {
             DeviceMotionEvent.requestPermission().then(response => {
@@ -57,6 +60,7 @@
                   var a = document.getElementById('alpha'),
                       b = document.getElementById('beta'),
                       g = document.getElementById('gamma'),
+                      dirText = document.getElementById('dirText'),
                       alpha = event.alpha,
                       beta = event.beta,
                       gamma = event.gamma;
@@ -64,6 +68,16 @@
                   a.innerHTML = Math.round(alpha);
                   b.innerHTML = Math.round(beta);
                   g.innerHTML = Math.round(gamma);
+
+                  if(old_alpha && old_alpha > alpha) {
+                    dirText.innerHTML = '右'
+                  }else {
+                    dirText.innerHTML = '左'
+                  }
+
+                  old_alpha = alpha;
+                  old_gamma = gamma;
+
 
                 }, false);
               }
@@ -123,7 +137,6 @@
           screenWidth = window.innerWidth,    //螢幕寬
           screenHeight = window.innerHeight,  //螢幕高
           playerMoveSpeed = 10,               //玩家鍵盤速度
-          bubaoSp,
           bubao_old_x = 0,
           bubaoScale = 0.5,
           app = new PIXI.Application({
@@ -156,8 +169,8 @@
 
             //顯示賺了多少錢
             const style = new PIXI.TextStyle({
-                fontSize: 20,
-                fill: "white"
+              fontSize: 20,
+              fill: "white"
             });
             numberText = new PIXI.Text('0',style);
             numberText.position.x = 30;
