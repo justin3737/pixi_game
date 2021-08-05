@@ -49,9 +49,10 @@
     </div>
 </body>
     <script type="text/javascript">
-        let bubaoSp,  //布寶實體物件
-        old_alpha,
-        old_gamma;
+        let bubaoSp,              //布寶實體物件
+          bubaoMobileSpeed = 2.2, //布寶手機陀螺儀控制移動速度
+          old_alpha,
+          old_gamma;
 
         function getAccel() {
           if(window.DeviceOrientationEvent) {
@@ -73,14 +74,14 @@
 
                   if(old_gamma && (gamma - old_gamma) > 0) {
                     dirText.innerHTML = '右';
-                    setDirection('right');
+                    //setDirection('right');
                   } else if (old_gamma && (gamma - old_gamma) < 0) {
                     dirText.innerHTML = '左';
-                    setDirection('left');
+                    //setDirection('left');
                   }
 
-                  if (old_gamma && (gamma - old_gamma) !=0 )
-                    bubaoSp.vx += (gamma - old_gamma)/2.2;
+                  if (old_gamma && (gamma - old_gamma) != 0)
+                    bubaoSp.vx += (gamma - old_gamma)/bubaoMobileSpeed;
 
                   old_alpha = alpha;
                   old_gamma = gamma;
@@ -147,7 +148,7 @@
           count_money = 0,        //計算得分
           screenWidth = window.innerWidth,    //螢幕寬
           screenHeight = window.innerHeight,  //螢幕高
-          playerMoveSpeed = 10,               //玩家鍵盤速度
+          bubaoKeyboardSpeed = 10,               //玩家鍵盤速度
           bubao_old_x = 0,
           bubaoScale = 0.5,
           app = new PIXI.Application({
@@ -202,7 +203,7 @@
             var right = keyboard(39);
             var down = keyboard(40);
             left.press = () => {
-              bubaoSp.vx = - playerMoveSpeed;
+              bubaoSp.vx = - bubaoKeyboardSpeed;
               bubaoSp.vy = 0;
               setDirection('left')
               bubaoSp.play();
@@ -214,7 +215,7 @@
             };
 
             right.press = () => {
-              bubaoSp.vx = playerMoveSpeed;
+              bubaoSp.vx = bubaoKeyboardSpeed;
               bubaoSp.vy = 0;
               setDirection('right')
               bubaoSp.play();
