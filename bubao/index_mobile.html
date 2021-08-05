@@ -46,7 +46,8 @@
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
-      版本:<span id="version">1</span><br/>
+      速度:<span id="speedText"></span><br/>
+      版本:<span id="version">1.1</span><br/>
     </div>
 </body>
     <script type="text/javascript">
@@ -65,6 +66,7 @@
                       b = document.getElementById('beta'),
                       g = document.getElementById('gamma'),
                       dirText = document.getElementById('dirText'),
+                      speedText = document.getElementById('speedText'),
                       alpha = event.alpha,
                       beta = event.beta,
                       gamma = event.gamma;
@@ -83,9 +85,10 @@
 
                   if (old_gamma && (gamma != old_gamma)) {
                     bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
-                    bubaoSp.play();
+                    speedText.innerHTML = (gamma - old_gamma) / bubaoMobileSpeed;
+                    //bubaoSp.play();
                   } else {
-                    bubaoSp.stop();
+                    //bubaoSp.stop();
                   }
 
                   old_alpha = alpha;
