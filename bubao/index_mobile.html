@@ -47,7 +47,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">1.5</span><br/>
+      版本:<span id="version">1.6</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -79,18 +79,17 @@
 
                   if(gamma - old_gamma > 0) {
                     dirText.innerHTML = '右';
-                    //setDirection('right');
+                    bubaoSp.setDirection('right');
                   } else if (gamma - old_gamma < 0) {
                     dirText.innerHTML = '左';
-                    //setDirection('left');
+                    bubaoSp.setDirection('left');
                   }
 
                   if (gamma == old_gamma){
-                    logText.innerHTML += '0</br>';
                     bubaoSp.vx += 0;
                     //bubaoSp.stop();
                   } else if (gamma != old_gamma){
-                    logText.innerHTML += '1</br>';
+                    //logText.innerHTML += '1</br>';
                     bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
                     speedText.innerHTML = (gamma - old_gamma) / bubaoMobileSpeed;
                     //bubaoSp.play();
@@ -354,13 +353,16 @@
               bubaoSp.animationSpeed = 0.2
             })
           }
-        }
-        function setDirection(dir) {
+
+          function setDirection(dir) {
             if (dir === 'left') {
               bubaoSp.scale.x = bubaoScale * -1
             } else {
               bubaoSp.scale.x = bubaoScale * 1
             }
           }
+
+          bubaoSp.setDirection = setDirection;
+        }
     </script>
 </html>
