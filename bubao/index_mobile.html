@@ -71,16 +71,16 @@
                   b.innerHTML = Math.round(beta);
                   g.innerHTML = Math.round(gamma);
 
-                  if(old_gamma && gamma > 0) {
+                  if(old_gamma && (gamma - old_gamma) > 0) {
                     dirText.innerHTML = '右';
                     setDirection('right');
-                  } else if (old_gamma && gamma < 0) {
+                  } else if (old_gamma && (gamma - old_gamma) < 0) {
                     dirText.innerHTML = '左';
                     setDirection('left');
                   }
 
-                  if (old_gamma && (gamma - old_gamma)!=0)
-                    bubaoSp.vx += (gamma - old_gamma)/2;
+                  if (old_gamma && (gamma - old_gamma) !=0 )
+                    bubaoSp.vx += (gamma - old_gamma)/2.2;
 
                   old_alpha = alpha;
                   old_gamma = gamma;
@@ -341,14 +341,13 @@
               bubaoSp.animationSpeed = 0.2
             })
           }
-
-          function setDirection(dir) {
+        }
+        function setDirection(dir) {
             if (dir === 'left') {
               bubaoSp.scale.x = bubaoScale * -1
             } else {
               bubaoSp.scale.x = bubaoScale * 1
             }
           }
-        }
     </script>
 </html>
