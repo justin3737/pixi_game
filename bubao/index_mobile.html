@@ -49,7 +49,9 @@
     </div>
 </body>
     <script type="text/javascript">
-        var bubaoSp;  //布寶實體物件
+        let bubaoSp,  //布寶實體物件
+        old_alpha,
+        old_gamma;
 
         function getAccel() {
           if(window.DeviceOrientationEvent) {
@@ -69,10 +71,10 @@
                   b.innerHTML = Math.round(beta);
                   g.innerHTML = Math.round(gamma);
 
-                  if(old_alpha && old_alpha > alpha) {
-                    dirText.innerHTML = '右'
-                  }else {
-                    dirText.innerHTML = '左'
+                  if(old_alpha && old_alpha < alpha) {
+                    dirText.innerHTML = '右';
+                  } else if (old_alpha && old_alpha > alpha) {
+                    dirText.innerHTML = '左';
                   }
 
                   old_alpha = alpha;
