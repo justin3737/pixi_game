@@ -71,9 +71,9 @@
                   b.innerHTML = Math.round(beta);
                   g.innerHTML = Math.round(gamma);
 
-                  if(old_alpha && old_alpha < alpha) {
+                  if(old_gamma && old_gamma < gamma) {
                     dirText.innerHTML = '右';
-                  } else if (old_alpha && old_alpha > alpha) {
+                  } else if (old_gamma && old_gamma > gamma) {
                     dirText.innerHTML = '左';
                   }
 
@@ -120,9 +120,13 @@
           );
           return key;
         }
-
+        function isMobileDevice() {
+          const mobileDevice = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone']
+          let isMobileDevice = mobileDevice.some(e => navigator.userAgent.match(e))
+          return isMobileDevice
+        }
         function init() {
-          if (window.DeviceOrientationEvent) {
+          if (isMobileDevice()) {
             //顯示取得手機陀螺儀授權按鈕
             document.getElementById('accelPermsButton').style.display = 'block';
           }
