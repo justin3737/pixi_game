@@ -46,6 +46,7 @@
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
+      版本:<span id="version">1</span><br/>
     </div>
 </body>
     <script type="text/javascript">
@@ -80,12 +81,15 @@
                     setDirection('left');
                   }
 
-                  if (old_gamma && (gamma != old_gamma))
-                    bubaoSp.vx += (gamma - old_gamma)/bubaoMobileSpeed;
+                  if (old_gamma && (gamma != old_gamma)) {
+                    bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
+                    bubaoSp.play();
+                  } else {
+                    bubaoSp.stop();
+                  }
 
                   old_alpha = alpha;
                   old_gamma = gamma;
-
 
                 }, false);
               }
