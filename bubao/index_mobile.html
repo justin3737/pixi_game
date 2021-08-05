@@ -36,6 +36,11 @@
           width: 140px;
           font-size: 13px;
         }
+
+        #logText {
+          height: 150px;
+          overflow-y: scroll;
+        }
     </style>
 </head>
 <body onload="init();">
@@ -78,8 +83,6 @@
                   b.innerHTML = Math.round(beta);
                   g.innerHTML = Math.round(gamma);
 
-                  //logText.innerHTML = bubaoSp.setDirection + '</br>'
-
                   if(gamma - old_gamma > 0) {
                     dirText.innerHTML = '右';
                     bubaoSp.setDirection('right')
@@ -87,6 +90,9 @@
                     dirText.innerHTML = '左';
                     bubaoSp.setDirection('left')
                   }
+
+                  logText.innerHTML += 'gamma: '+ gamma +'</br>'
+                  logText.innerHTML += 'old_gamma: '+ old_gamma +'</br>'
 
                   if (gamma == old_gamma){
                     bubaoSp.vx += 0;
