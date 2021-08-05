@@ -74,14 +74,13 @@
                   if(old_gamma && (gamma - old_gamma) > 0) {
                     dirText.innerHTML = '右';
                     setDirection('right');
-
                   } else if (old_gamma && (gamma - old_gamma) < 0) {
                     dirText.innerHTML = '左';
                     setDirection('left');
                   }
 
                   if (old_gamma && (gamma - old_gamma)!=0)
-                    bubaoSp.vx += (gamma - old_gamma)/2.2;
+                    bubaoSp.vx += (gamma - old_gamma)/2;
 
                   old_alpha = alpha;
                   old_gamma = gamma;
