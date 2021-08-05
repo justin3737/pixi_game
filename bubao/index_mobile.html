@@ -78,7 +78,7 @@
                     dirText.innerHTML = '左';
                   }
 
-                  if(old_gamma)
+                  if(old_gamma && (gamma - old_gamma)!=0)
                     bubaoSp.vx += (gamma - old_gamma)/2.5;
 
                   old_alpha = alpha;
