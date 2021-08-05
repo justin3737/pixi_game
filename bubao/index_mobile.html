@@ -47,7 +47,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">1.8</span><br/>
+      版本:<span id="version">1.9</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -82,21 +82,19 @@
 
                   if(gamma - old_gamma > 0) {
                     dirText.innerHTML = '右';
-                    //bubaoSp.scale.x = BUBAO_SCALE * 1
                     bubaoSp.setDirection('right')
                   } else if (gamma - old_gamma < 0) {
                     dirText.innerHTML = '左';
-                    //bubaoSp.scale.x = BUBAO_SCALE * -1
                     bubaoSp.setDirection('left')
                   }
 
                   if (gamma == old_gamma){
                     bubaoSp.vx += 0;
-                    //bubaoSp.stop();
+                    bubaoSp.stop();
                   } else if (gamma != old_gamma){
                     bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
                     speedText.innerHTML = (gamma - old_gamma) / bubaoMobileSpeed;
-                    //bubaoSp.play();
+                    bubaoSp.play();
                   }
 
                   old_alpha = alpha;
@@ -219,7 +217,6 @@
             left.press = () => {
               bubaoSp.vx = - bubaoKeyboardSpeed;
               bubaoSp.vy = 0;
-              //bubaoSp.scale.x = BUBAO_SCALE * -1
               bubaoSp.setDirection('left')
               bubaoSp.play();
             };
@@ -310,10 +307,8 @@
             if (bubaoSp.dragging) {
               bubaoSp.x = e.data.global.x - bubaoSp.width/2;
               if (bubao_old_x -  e.data.global.x > 0) {
-                //bubaoSp.scale.x = BUBAO_SCALE * -1
                 bubaoSp.setDirection('left')
               } else {
-                //bubaoSp.scale.x = BUBAO_SCALE * 1
                 bubaoSp.setDirection('right')
               }
               bubao_old_x = e.data.global.x;
