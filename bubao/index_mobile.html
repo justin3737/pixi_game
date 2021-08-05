@@ -85,8 +85,8 @@
                     setDirection('left');
                   }
 
-                  logText.innerHTML += 'old_gamma: ' + old_gamma;
-                  logText.innerHTML += 'gamma: ' + gamma;
+                  logText.innerHTML += 'old_gamma: ' + old_gamma + '<br/>';
+                  logText.innerHTML += 'gamma: ' + gamma + '<br/>';
 
                   if (old_gamma && (gamma != old_gamma)) {
                     bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
@@ -99,6 +99,7 @@
                   old_alpha = alpha;
                   old_gamma = gamma;
 
+                  logText.innerHTML += 'old_gamma: ' + old_gamma + '<br/>';
                 }, false);
               }
             });
