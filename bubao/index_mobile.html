@@ -55,7 +55,8 @@
         let bubaoSp,              //布寶實體物件
           bubaoMobileSpeed = 2.5, //布寶手機陀螺儀控制移動速度
           old_alpha = 0,
-          old_gamma = 0;
+          old_gamma = 0,
+          BUBAO_SCALE = 0.5;
 
         function getAccel() {
           if(window.DeviceOrientationEvent) {
@@ -77,22 +78,20 @@
                   b.innerHTML = Math.round(beta);
                   g.innerHTML = Math.round(gamma);
 
-                  logText.innerHTML = typeof bubaoSp.setDirection + '</br>'
-                  logText.innerHTML = bubaoSp.setDirection + '</br>'
+                  //logText.innerHTML = bubaoSp.setDirection + '</br>'
 
                   if(gamma - old_gamma > 0) {
                     dirText.innerHTML = '右';
-                    bubaoSp.setDirection('right');
+                    bubaoSp.scale.x = BUBAO_SCALE * 1
                   } else if (gamma - old_gamma < 0) {
                     dirText.innerHTML = '左';
-                    bubaoSp.setDirection('left');
+                    bubaoSp.scale.x = BUBAO_SCALE * -1
                   }
 
                   if (gamma == old_gamma){
                     bubaoSp.vx += 0;
                     //bubaoSp.stop();
                   } else if (gamma != old_gamma){
-                    //logText.innerHTML += '1</br>';
                     bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
                     speedText.innerHTML = (gamma - old_gamma) / bubaoMobileSpeed;
                     //bubaoSp.play();
@@ -164,7 +163,6 @@
           screenHeight = window.innerHeight,  //螢幕高
           bubaoKeyboardSpeed = 10,               //玩家鍵盤速度
           bubao_old_x = 0,
-          bubaoScale = 0.5,
           app = new PIXI.Application({
             width: screenWidth,
             height: screenHeight,
@@ -219,7 +217,7 @@
             left.press = () => {
               bubaoSp.vx = - bubaoKeyboardSpeed;
               bubaoSp.vy = 0;
-              setDirection('left')
+              bubaoSp.scale.x = BUBAO_SCALE * -1
               bubaoSp.play();
             };
             left.release = () => {
@@ -231,7 +229,7 @@
             right.press = () => {
               bubaoSp.vx = bubaoKeyboardSpeed;
               bubaoSp.vy = 0;
-              setDirection('right')
+              bubaoSp.scale.x = BUBAO_SCALE * 1
               bubaoSp.play();
             };
             right.release = () => {
@@ -308,9 +306,11 @@
             if (bubaoSp.dragging) {
               bubaoSp.x = e.data.global.x - bubaoSp.width/2;
               if (bubao_old_x -  e.data.global.x > 0) {
-                setDirection('left');
+                //setDirection('left');
+                bubaoSp.scale.x = BUBAO_SCALE * -1
               } else {
-                setDirection('right');
+                //setDirection('right');
+                bubaoSp.scale.x = BUBAO_SCALE * 1
               }
               bubao_old_x = e.data.global.x;
             }
@@ -357,15 +357,15 @@
             })
           }
 
-          function setDirection(dir) {
-            if (dir === 'left') {
-              bubaoSp.scale.x = bubaoScale * -1
-            } else {
-              bubaoSp.scale.x = bubaoScale * 1
-            }
-          }
+          // function setDirection(dir) {
+          //   if (dir === 'left') {
+          //     bubaoSp.scale.x = BUBAO_SCALE * -1
+          //   } else {
+          //     bubaoSp.scale.x = BUBAO_SCALE * 1
+          //   }
+          // }
 
-          bubaoSp.setDirection = setDirection;
+          //bubaoSp.setDirection = setDirection;
         }
     </script>
 </html>

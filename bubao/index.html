@@ -26,6 +26,7 @@
     <div id="box" class="box"></div>
 </body>
     <script type="text/javascript">
+        var bubaoSp;
         function keyboard(keyCode) {
           let key = {};
           key.code = keyCode;
@@ -75,9 +76,8 @@
           screenWidth = window.innerWidth,    //螢幕寬
           screenHeight = window.innerHeight,  //螢幕高
           playerMoveSpeed = 10,               //玩家鍵盤速度
-          bubaoSp,
           bubao_old_x = 0,
-          bubaoScale = 0.5,
+          BUBAO_SCALE = 0.5,
           app = new PIXI.Application({
             width: screenWidth,
             height: screenHeight,
@@ -108,8 +108,8 @@
 
             //顯示賺了多少錢
             const style = new PIXI.TextStyle({
-                fontSize: 20,
-                fill: "white"
+              fontSize: 20,
+              fill: "white"
             });
             numberText = new PIXI.Text('0',style);
             numberText.position.x = 30;
@@ -132,7 +132,7 @@
             left.press = () => {
               bubaoSp.vx = - playerMoveSpeed;
               bubaoSp.vy = 0;
-              setDirection('left')
+              bubaoSp.scale.x = BUBAO_SCALE * -1
               bubaoSp.play();
             };
             left.release = () => {
@@ -144,7 +144,7 @@
             right.press = () => {
               bubaoSp.vx = playerMoveSpeed;
               bubaoSp.vy = 0;
-              setDirection('right')
+              bubaoSp.scale.x = BUBAO_SCALE * 1
               bubaoSp.play();
             };
             right.release = () => {
@@ -212,25 +212,25 @@
           }
 
           function onDragStart(e) {
-            bubaoSp.x = e.data.global.x - bubaoSp.width/2;
+            bubaoSp.position.x = e.data.global.x - bubaoSp.width/2;
             bubaoSp.dragging = true;
             bubaoSp.play();
           }
 
           function onDragMove(e) {
             if (bubaoSp.dragging) {
-              bubaoSp.x = e.data.global.x - bubaoSp.width/2;
+              bubaoSp.position.x = e.data.global.x - bubaoSp.width/2;
               if (bubao_old_x -  e.data.global.x > 0) {
-                setDirection('left');
+                bubaoSp.scale.x = BUBAO_SCALE * -1
               } else {
-                setDirection('right');
+                bubaoSp.scale.x = BUBAO_SCALE * 1
               }
               bubao_old_x = e.data.global.x;
             }
           }
 
           function onDragEnd(e) {
-            bubaoSp.x = e.data.global.x - bubaoSp.width/2;
+            bubaoSp.position.x = e.data.global.x - bubaoSp.width/2;
             bubaoSp.dragging = false;
             bubaoSp.stop();
           }
@@ -268,15 +268,9 @@
             app.ticker.add((delta) => {
               bubaoSp.animationSpeed = 0.2
             })
+
           }
 
-          function setDirection(dir) {
-            if (dir === 'left') {
-              bubaoSp.scale.x = bubaoScale * -1
-            } else {
-              bubaoSp.scale.x = bubaoScale * 1
-            }
-          }
         }
     </script>
 </html>
