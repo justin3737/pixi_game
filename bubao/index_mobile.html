@@ -85,16 +85,11 @@
                     //setDirection('left');
                   }
 
-                  logText.innerHTML += 'old_gamma: ' + old_gamma + '<br/>';
-                  logText.innerHTML += 'gamma: ' + gamma + '<br/>';
-
                   if (gamma != old_gamma) {
-                    logText.innerHTML += '1'+ '<br/>';
                     bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
                     speedText.innerHTML = (gamma - old_gamma) / bubaoMobileSpeed;
                     //bubaoSp.play();
                   } else {
-                    logText.innerHTML += '2'+ '<br/>';
                     //bubaoSp.stop();
                   }
 
