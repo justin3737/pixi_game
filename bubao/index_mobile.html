@@ -48,6 +48,7 @@
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
       版本:<span id="version">1.1</span><br/>
+      log:<span id="logText"></span><br/>
     </div>
 </body>
     <script type="text/javascript">
@@ -67,6 +68,7 @@
                       g = document.getElementById('gamma'),
                       dirText = document.getElementById('dirText'),
                       speedText = document.getElementById('speedText'),
+                      logText = document.getElementById('logText'),
                       alpha = event.alpha,
                       beta = event.beta,
                       gamma = event.gamma;
@@ -82,6 +84,9 @@
                     dirText.innerHTML = '左';
                     setDirection('left');
                   }
+
+                  logText.innerHTML += 'old_gamma: ' + old_gamma;
+                  logText.innerHTML += 'gamma: ' + gamma;
 
                   if (old_gamma && (gamma != old_gamma)) {
                     bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
