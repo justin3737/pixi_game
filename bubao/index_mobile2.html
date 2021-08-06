@@ -52,7 +52,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">2.04</span><br/>
+      版本:<span id="version">2.05</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -94,7 +94,7 @@
                   if (gamma == old_gamma) {
                     bubaoSp.vx += 0;
                     bubaoSp.stop();
-                    logText.innerHTML = 'stop';
+                    logText.innerHTML = 'bubaoSp.vx: ' + bubaoSp.vx ;
                   } else if (gamma != old_gamma) {
                     bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
                     let delta = (gamma - old_gamma);
