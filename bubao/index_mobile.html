@@ -52,7 +52,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">1.19</span><br/>
+      版本:<span id="version">1.20</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -95,14 +95,15 @@
                   }
 
                   if (delta === 0){
-                    logText.innerHTML = 'stop'
+                    //logText.innerHTML = 'stop'
                     bubaoSp.vx += 0;
                     bubaoSp.stop();
                   } else {
-                    logText.innerHTML = 'play'
+                    //logText.innerHTML = 'play'
                     bubaoSp.vx += delta / bubaoMobileSpeed;
                     bubaoSp.play();
                   }
+                  logText.innerHTML = 'bubaoSp.vx: ' + bubaoSp.vx
 
                   old_alpha = alpha;
                   old_gamma = gamma;
