@@ -52,7 +52,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">1.17</span><br/>
+      版本:<span id="version">1.18</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -84,6 +84,9 @@
                   b.innerHTML = beta;
                   g.innerHTML = gamma;
 
+                  delta =  (gamma - old_gamma);
+                  logText.innerHTML = 'delta: ' + delta + '</br>'
+
                   if(gamma - old_gamma > 0) {
                     dirText.innerHTML = '右';
                     bubaoSp.setDirection('right')
@@ -102,9 +105,6 @@
 
                   old_alpha = alpha;
                   old_gamma = gamma;
-
-                  delta =  (gamma - old_gamma);
-                  logText.innerHTML = 'delta: ' + delta + '</br>'
 
                 }, false);
               }
