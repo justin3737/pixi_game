@@ -52,7 +52,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">2.01</span><br/>
+      版本:<span id="version">2.02</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -92,7 +92,7 @@
                   }
 
                   if (gamma == old_gamma){
-                    bubaoSp.vx += 0;
+                    bubaoSp.vx = 0;
                     bubaoSp.stop();
                   } else if (gamma != old_gamma){
                     logText.innerHTML = 'gamma != old_gamma </br>'
