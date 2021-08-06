@@ -50,7 +50,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">1.28</span><br/>
+      版本:<span id="version">1.29</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -308,6 +308,7 @@
 
           function onDragMove(e) {
             if (bubaoSp.dragging) {
+              bubaoSp.play();
               bubaoSp.x = e.data.global.x - bubaoSp.width/2;
               if (bubao_old_x -  e.data.global.x > 0) {
                 bubaoSp.setDirection('left')
