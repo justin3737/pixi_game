@@ -52,7 +52,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">1.12</span><br/>
+      版本:<span id="version">1.17</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -61,6 +61,7 @@
           bubaoMobileSpeed = 2.5, //布寶手機陀螺儀控制移動速度
           old_alpha = 0,
           old_gamma = 0,
+          delta = 0,
           BUBAO_SCALE = 0.5;
 
         function getAccel() {
@@ -95,15 +96,15 @@
                     bubaoSp.vx += 0;
                     bubaoSp.stop();
                   } else if (gamma != old_gamma){
-                    logText.innerHTML = 'gamma != old_gamma </br>'
                     bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
-                    let delta = (gamma - old_gamma);
-                    logText.innerHTML = 'delta: ' + delta + '</br>'
                     bubaoSp.play();
                   }
 
                   old_alpha = alpha;
                   old_gamma = gamma;
+
+                  delta =  (gamma - old_gamma);
+                  logText.innerHTML = 'delta: ' + delta + '</br>'
 
                 }, false);
               }
