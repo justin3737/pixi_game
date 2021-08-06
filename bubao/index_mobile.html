@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Bubao小遊戲</title>
     <script src="../pixi.min.js"></script>
     <script src="../bump.js"></script>
     <!-- use pixi-legacy for unsupported webGL's phone ex: Samsung GALAXY J7
@@ -52,7 +52,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">1.11</span><br/>
+      版本:<span id="version">1.12</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -92,14 +92,13 @@
                   }
 
                   if (gamma == old_gamma){
-                    logText.innerHTML = 'bubaoSp.vx: ' + bubaoSp.vx + '</br>'
-                    logText.innerHTML = 'bubaoSp.position.x: ' + bubaoSp.position.x + '</br>'
                     bubaoSp.vx += 0;
                     bubaoSp.stop();
                   } else if (gamma != old_gamma){
                     logText.innerHTML = 'gamma != old_gamma </br>'
                     bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
-                    speedText.innerHTML = (gamma - old_gamma) / bubaoMobileSpeed;
+                    let delta = (gamma - old_gamma);
+                    logText.innerHTML = 'delta: ' + delta + '</br>'
                     bubaoSp.play();
                   }
 
@@ -235,7 +234,6 @@
             right.press = () => {
               bubaoSp.vx = bubaoKeyboardSpeed;
               bubaoSp.vy = 0;
-              //bubaoSp.scale.x = BUBAO_SCALE * 1
               bubaoSp.setDirection('right')
               bubaoSp.play();
             };
