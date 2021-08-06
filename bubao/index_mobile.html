@@ -50,7 +50,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">1.27</span><br/>
+      版本:<span id="version">1.28</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -60,7 +60,8 @@
           old_alpha = 0,
           old_gamma = 0,
           delta = 0,
-          BUBAO_SCALE = 0.5;
+          BUBAO_SCALE = 0.5
+          timeOutID;
 
         function getAccel() {
           if(window.DeviceOrientationEvent) {
@@ -92,10 +93,12 @@
                     bubaoSp.vx = - bubaoMobileSpeed;
                     bubaoSp.play();
                   } else if (delta === 0){
-                    setTimeout(() => {
+                    timeOutID = setTimeout(() => {
                       bubaoSp.vx = 0;
                       bubaoSp.stop();
-                    }, 500);
+                      timeOutID = null;
+                      clearTimeout(timeOutID);
+                    }, 200);
                   }
 
                   old_alpha = alpha;
