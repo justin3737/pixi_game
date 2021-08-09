@@ -64,50 +64,55 @@
           BUBAO_SCALE = 0.5;
 
         function getAccel() {
-          if(window.DeviceOrientationEvent) {
-            DeviceMotionEvent.requestPermission().then(response => {
+          document.getElementById('accelPermsButton').style.display = 'none';
+          window.addEventListener('deviceorientation', function(event) {
+            var a = document.getElementById('alpha'),
+                b = document.getElementById('beta'),
+                g = document.getElementById('gamma'),
+                dirText = document.getElementById('dirText'),
+                speedText = document.getElementById('speedText'),
+                logText = document.getElementById('logText'),
+                alpha = Math.round(event.alpha),
+                beta = Math.round(event.beta),
+                gamma = Math.round(event.gamma);
+
+            a.innerHTML = alpha;
+            b.innerHTML = beta;
+            g.innerHTML = gamma;
+
+            if(gamma - old_gamma > 0) {
+              dirText.innerHTML = '右';
+              bubaoSp.setDirection('right')
+            } else if (gamma - old_gamma < 0) {
+              dirText.innerHTML = '左';
+              bubaoSp.setDirection('left')
+            }
+
+            if (gamma == old_gamma) {
+              bubaoSp.vx += 0;
+              bubaoSp.stop();
+              logText.innerHTML = 'bubaoSp.vx: ' + bubaoSp.vx ;
+            } else if (gamma != old_gamma) {
+              bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
+              let delta = (gamma - old_gamma);
+              logText.innerHTML = '';
+              bubaoSp.play();
+            }
+
+            old_alpha = alpha;
+            old_gamma = gamma;
+
+          }, false);
+        }
+        function getPermision() {
+          if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+            DeviceOrientationEvent.requestPermission().then(response => {
               if (response == 'granted') {
-                document.getElementById('accelPermsButton').style.display = 'none';
-                window.addEventListener('deviceorientation', function(event) {
-                  var a = document.getElementById('alpha'),
-                      b = document.getElementById('beta'),
-                      g = document.getElementById('gamma'),
-                      dirText = document.getElementById('dirText'),
-                      speedText = document.getElementById('speedText'),
-                      logText = document.getElementById('logText'),
-                      alpha = Math.round(event.alpha),
-                      beta = Math.round(event.beta),
-                      gamma = Math.round(event.gamma);
-
-                  a.innerHTML = alpha;
-                  b.innerHTML = beta;
-                  g.innerHTML = gamma;
-
-                  if(gamma - old_gamma > 0) {
-                    dirText.innerHTML = '右';
-                    bubaoSp.setDirection('right')
-                  } else if (gamma - old_gamma < 0) {
-                    dirText.innerHTML = '左';
-                    bubaoSp.setDirection('left')
-                  }
-
-                  if (gamma == old_gamma) {
-                    bubaoSp.vx += 0;
-                    bubaoSp.stop();
-                    logText.innerHTML = 'bubaoSp.vx: ' + bubaoSp.vx ;
-                  } else if (gamma != old_gamma) {
-                    bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
-                    let delta = (gamma - old_gamma);
-                    logText.innerHTML = '';
-                    bubaoSp.play();
-                  }
-
-                  old_alpha = alpha;
-                  old_gamma = gamma;
-
-                }, false);
+                getAccel();
               }
             });
+          } else {
+            getAccel();
           }
         }
         function keyboard(keyCode) {
