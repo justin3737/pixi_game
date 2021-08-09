@@ -40,6 +40,7 @@
         #logText {
           height: 150px;
           overflow-y: scroll;
+          color: #000;
         }
     </style>
 </head>
@@ -52,7 +53,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">2.08</span><br/>
+      版本:<span id="version">2.09</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -61,7 +62,8 @@
           bubaoMobileSpeed = 2.5, //布寶手機陀螺儀控制移動速度
           old_alpha = 0,
           old_gamma = 0,
-          BUBAO_SCALE = 0.5;
+          BUBAO_SCALE = 0.5,
+          logText = document.getElementById('logText');
 
         function getAccel() {
           document.getElementById('accelPermsButton').style.display = 'none';
@@ -71,7 +73,6 @@
                 g = document.getElementById('gamma'),
                 dirText = document.getElementById('dirText'),
                 speedText = document.getElementById('speedText'),
-                logText = document.getElementById('logText'),
                 alpha = Math.round(event.alpha),
                 beta = Math.round(event.beta),
                 gamma = Math.round(event.gamma);
@@ -91,11 +92,9 @@
             if (gamma == old_gamma) {
               bubaoSp.vx += 0;
               bubaoSp.stop();
-              logText.innerHTML = 'bubaoSp.vx: ' + bubaoSp.vx ;
             } else if (gamma != old_gamma) {
               bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
               let delta = (gamma - old_gamma);
-              logText.innerHTML = '';
               bubaoSp.play();
             }
 
@@ -260,6 +259,7 @@
           function update() {
             bubaoSp.position.x += bubaoSp.vx;
             bubaoSp.position.y += bubaoSp.vy;
+            logText.innerHTML += 'bubaoSp.vx: ' + bubaoSp.vx ;
 
             //避免超出畫布
             if (bubaoSp.position.x <= 0) {
