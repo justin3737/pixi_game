@@ -53,7 +53,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">2.09</span><br/>
+      版本:<span id="version">2.10</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -257,9 +257,10 @@
           }
 
           function update() {
-            bubaoSp.position.x += bubaoSp.vx;
-            bubaoSp.position.y += bubaoSp.vy;
-            logText.innerHTML += 'bubaoSp.vx: ' + bubaoSp.vx ;
+            if (bubaoSp.playing) {
+              bubaoSp.position.x += bubaoSp.vx;
+              bubaoSp.position.y += bubaoSp.vy;
+            }
 
             //避免超出畫布
             if (bubaoSp.position.x <= 0) {
