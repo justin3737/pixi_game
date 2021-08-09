@@ -52,7 +52,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">2.06</span><br/>
+      版本:<span id="version">2.07</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -111,8 +111,6 @@
                 getAccel();
               }
             });
-          } else {
-            getAccel();
           }
         }
         function keyboard(keyCode) {
@@ -150,14 +148,26 @@
           return key;
         }
         function isMobileDevice() {
-          const mobileDevice = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone']
-          let isMobileDevice = mobileDevice.some(e => navigator.userAgent.match(e))
-          return isMobileDevice
+          let mobileDevice = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone']
+          return checkDevice(mobileDevice)
+        }
+        function isIOS() {
+          let mobileDevice = ['iPhone', 'iPad']
+          return checkDevice(mobileDevice)
+        }
+        function isAndroid() {
+          let mobileDevice = ['Android']
+          return checkDevice(mobileDevice)
+        }
+        function checkDevice(deviceArray) {
+          return deviceArray.some(e => navigator.userAgent.match(e))
         }
         function init() {
-          if (isMobileDevice()) {
+          if (isMobileDevice() && isIOS()) {
             //顯示取得手機陀螺儀授權按鈕
             document.getElementById('accelPermsButton').style.display = 'block';
+          } else if(isAndroid()){
+            getAccel();
           }
           let type = "WebGL"
           if (!PIXI.utils.isWebGLSupported()) {
