@@ -32,8 +32,8 @@
           position: absolute;
           display: none;
           top: 30px;
-          left: calc((100% - 140px) /2);
-          width: 140px;
+          left: calc((100% - 150px) /2);
+          width: 150px;
           font-size: 13px;
         }
 
@@ -45,14 +45,14 @@
 </head>
 <body onload="init();">
     <div id="box" class="box"></div>
-    <button id="accelPermsButton" onclick="getPermision()">取得手機陀螺儀授權</button>
+    <button id="accelPermsButton" onclick="getPermision()">使用手機陀螺儀進行遊戲</button>
     <div class="info">
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">2.07</span><br/>
+      版本:<span id="version">2.08</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -111,6 +111,8 @@
                 getAccel();
               }
             });
+          } else {
+            getAccel();
           }
         }
         function keyboard(keyCode) {
@@ -149,25 +151,12 @@
         }
         function isMobileDevice() {
           let mobileDevice = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone']
-          return checkDevice(mobileDevice)
-        }
-        function isIOS() {
-          let mobileDevice = ['iPhone', 'iPad']
-          return checkDevice(mobileDevice)
-        }
-        function isAndroid() {
-          let mobileDevice = ['Android']
-          return checkDevice(mobileDevice)
-        }
-        function checkDevice(deviceArray) {
-          return deviceArray.some(e => navigator.userAgent.match(e))
+          return mobileDevice.some(e => navigator.userAgent.match(e))
         }
         function init() {
-          if (isMobileDevice() && isIOS()) {
+          if (isMobileDevice()) {
             //顯示取得手機陀螺儀授權按鈕
             document.getElementById('accelPermsButton').style.display = 'block';
-          } else if(isAndroid()){
-            getAccel();
           }
           let type = "WebGL"
           if (!PIXI.utils.isWebGLSupported()) {
