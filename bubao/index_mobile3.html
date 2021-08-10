@@ -50,9 +50,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      方向:<span id="dirText"></span><br/>
-      速度:<span id="speedText"></span><br/>
-      版本:<span id="version">3.13</span><br/>
+      版本:<span id="version">3.17</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -69,8 +67,6 @@
             var a = document.getElementById('alpha'),
                 b = document.getElementById('beta'),
                 g = document.getElementById('gamma'),
-                dirText = document.getElementById('dirText'),
-                speedText = document.getElementById('speedText'),
                 alpha = Math.round(event.alpha),
                 beta = Math.round(event.beta),
                 gamma = Math.round(event.gamma);
@@ -83,11 +79,9 @@
               bubaoSp.play();
 
             if (gamma - old_gamma > 0) {
-              dirText.innerHTML = '右';
               bubaoSp.setDirection('right')
               bubaoSp.vx = bubaoMobileSpeed;
             } else if (gamma - old_gamma < 0) {
-              dirText.innerHTML = '左';
               bubaoSp.vx = - bubaoMobileSpeed;
               bubaoSp.setDirection('left')
             } else {
@@ -228,22 +222,23 @@
           // }
 
           function update() {
-            bubaoSp.position.x += bubaoSp.vx;
-            bubaoSp.position.y += bubaoSp.vy;
+            bubaoSp.updateSprite();
+            // bubaoSp.position.x += bubaoSp.vx;
+            // bubaoSp.position.y += bubaoSp.vy;
 
-            //避免超出畫布
-            if (bubaoSp.position.x <= 0) {
-              bubaoSp.position.x = bubaoSp.width/2;
-            }
-            if (bubaoSp.position.x >= screenWidth) {
-              bubaoSp.position.x = screenWidth-bubaoSp.width/2;
-            }
-            if (bubaoSp.position.y <=0 ) {
-              bubaoSp.position.y = 0;
-            }
-            if (bubaoSp.position.y >= screenHeight-bubaoSp.height) {
-              bubaoSp.position.y=screenHeight-bubaoSp.height;
-            }
+            // //避免超出畫布
+            // if (bubaoSp.position.x <= 0) {
+            //   bubaoSp.position.x = bubaoSp.width/2;
+            // }
+            // if (bubaoSp.position.x >= screenWidth) {
+            //   bubaoSp.position.x = screenWidth-bubaoSp.width/2;
+            // }
+            // if (bubaoSp.position.y <=0 ) {
+            //   bubaoSp.position.y = 0;
+            // }
+            // if (bubaoSp.position.y >= screenHeight-bubaoSp.height) {
+            //   bubaoSp.position.y=screenHeight-bubaoSp.height;
+            // }
 
             //錢錢forEach處理
             moneys.children.forEach(obj => {
@@ -311,13 +306,15 @@
             this.resource_scale = 0.5;
             this.moveSpeed = 8;
             this.last_position_x = 0;
+            this.screenwWidth = window.innerWidth;
+            this.screenHeight = window.innerHeight;
             this.init();
           }
 
           init() {
             //出場位置
-            this.position.x = (window.innerWidth - 120) / 2;
-            this.position.y = window.innerHeight - 120 - 20;
+            this.position.x = (this.screenwWidth - 120) / 2;
+            this.position.y =this.screenHeight - 120 - 20;
 
             //鍵盤事件
             let left = keyboard(37),
@@ -342,6 +339,25 @@
             this.on('pointermove', this.onDragMove)
             this.on('pointerup', this.onDragEnd)
             this.on('pointerupoutside', this.onDragEnd);
+          }
+
+          updateSprite() {
+            this.position.x += this.vx;
+            this.position.y += this.vy;
+
+            //避免超出畫布
+            if (this.position.x <= 0) {
+              this.position.x = this.width/2;
+            }
+            if (this.position.x >= this.screenWidth) {
+              this.position.x = this.screenWidth - this.width/2;
+            }
+            if (this.position.y <=0 ) {
+              this.position.y = 0;
+            }
+            if (this.position.y >= this.screenHeight - this.height) {
+              this.position.y = this.screenHeight - this.height;
+            }
           }
 
           setDirection(dir) {
