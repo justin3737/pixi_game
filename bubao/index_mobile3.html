@@ -6,7 +6,6 @@
     <title>Bubao小遊戲</title>
     <script src="../pixi.min.js"></script>
     <script src="../bump.js"></script>
-    <script src="../gsap.min.js"></script>
     <!-- use pixi-legacy for unsupported webGL's phone ex: Samsung GALAXY J7
     <script src="../pixi-legacy.min.js"></script>
     -->
@@ -53,7 +52,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">3.10</span><br/>
+      版本:<span id="version">3.11</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -62,7 +61,6 @@
           bubaoMobileSpeed = 8,   //布寶手機陀螺儀控制移動速度
           old_alpha = 0,
           old_gamma = 0,
-          BUBAO_SCALE = 0.5,
           logText = document.getElementById('logText');
 
         function getAccel() {
@@ -151,7 +149,6 @@
           return mobileDevice.some(e => navigator.userAgent.match(e))
         }
         function init() {
-          console.log(typeof TweenMax)
           if (isMobileDevice()) {
             //顯示取得手機陀螺儀授權按鈕
             document.getElementById('accelPermsButton').style.display = 'block';
@@ -265,9 +262,6 @@
             bubaoSp.position.x += bubaoSp.vx;
             bubaoSp.position.y += bubaoSp.vy;
 
-            //isStop(bubaoSp, bubaoSp.position.x)
-
-
             //避免超出畫布
             if (bubaoSp.position.x <= 0) {
               bubaoSp.position.x = bubaoSp.width/2;
@@ -346,38 +340,46 @@
               textureArray.push(texture);
             };
 
-            bubaoSp = new PIXI.AnimatedSprite(textureArray);
+            bubaoSp = new BuBao(textureArray);
 
             app.stage.addChild(bubaoSp);
 
-            bubaoSp.anchor.x = 0.5;
-            bubaoSp.circular = true;
-            bubaoSp.width = 120;
-            bubaoSp.height = 120;
-            bubaoSp.position.x = (screenWidth - 120) / 2;
-            bubaoSp.position.y = screenHeight - 120 - 20;
-            bubaoSp.vx = 0;
-            bubaoSp.vy = 0;
-            bubaoSp.interactive = true;
-            bubaoSp.buttonMode = true;
-            bubaoSp.dragging = false;
             bubaoSp.on('pointerdown', onDragStart)
             bubaoSp.on('pointermove', onDragMove)
             bubaoSp.on('pointerup', onDragEnd)
             bubaoSp.on('pointerupoutside', onDragEnd);
-            bubaoSp.setDirection = function(dir) {
-              if (dir === 'left') {
-                bubaoSp.scale.x = BUBAO_SCALE * -1
-              } else {
-                bubaoSp.scale.x = BUBAO_SCALE * 1
-              }
-            }
             app.ticker.add((delta) => {
               bubaoSp.animationSpeed = 0.1
             })
 
           }
 
+        }
+
+        class BuBao extends PIXI.AnimatedSprite {
+          constructor (textures, loop){
+            super(textures, loop);
+            this.width = 120;
+            this.height = 120;
+            this.vx = 0;
+            this.vy = 0;
+            this.interactive = true;
+            this.buttonMode = true;
+            this.dragging = false;
+            this.anchor.x = 0.5;
+            this.circular = true;
+            this.position.x = (window.innerWidth - 120) / 2;
+            this.position.y = window.innerHeight - 120 - 20;
+            this.resource_scale = 0.5;
+          }
+
+          setDirection (dir) {
+            if (dir === 'left') {
+              this.scale.x = this.resource_scale * -1
+            } else {
+              this.scale.x = this.resource_scale * 1
+            }
+          }
         }
     </script>
 </html>
