@@ -41,6 +41,11 @@
           height: 150px;
           overflow-y: scroll;
         }
+
+        #alpha, #beta {
+          display: none;
+        }
+
     </style>
 </head>
 <body onload="init();">
@@ -50,7 +55,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">3.17</span><br/>
+      版本:<span id="version">3.20</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -85,7 +90,7 @@
               bubaoSp.vx = - bubaoMobileSpeed;
               bubaoSp.setDirection('left')
             } else {
-              bubaoSp.vx = 0;
+              bubaoSp.running(0);
             }
 
             old_alpha = alpha;
@@ -322,16 +327,16 @@
               right = keyboard(39),
               down = keyboard(40);
             left.press = () => {
-              this.runing(-this.moveSpeed);
+              this.running(-this.moveSpeed);
             };
             left.release = () => {
-              this.runing(0);
+              this.running(0);
             };
             right.press = () => {
-              this.runing(this.moveSpeed);
+              this.running(this.moveSpeed);
             };
             right.release = () => {
-              this.runing(0);
+              this.running(0);
             };
 
             //觸碰事件
@@ -368,7 +373,7 @@
             }
           }
 
-          runing(deltaX) {
+          running(deltaX) {
             if (!deltaX) {
               this.vx = 0;
               this.stop();
