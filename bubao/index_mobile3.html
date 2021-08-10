@@ -82,23 +82,23 @@
             b.innerHTML = beta;
             g.innerHTML = gamma;
 
-
+            bubaoSp.play();
             if ((gamma - old_gamma > 0) || (alpha - old_alpha > 0)) {
               dirText.innerHTML = '右';
               bubaoSp.setDirection('right')
               bubaoSp.vx = bubaoMobileSpeed;
-              bubaoSp.play();
+              //bubaoSp.play();
             } else if ((gamma - old_gamma < 0) || (alpha - old_alpha < 0)) {
               dirText.innerHTML = '左';
               bubaoSp.vx = - bubaoMobileSpeed;
               bubaoSp.setDirection('left')
-              bubaoSp.play();
+              //bubaoSp.play();
             } else {
               bubaoSp.vx = 0;
               //bubaoSp.stop();
-              setTimeout(() => {
-                bubaoSp.stop();
-              }, 300);
+              // setTimeout(() => {
+              //   bubaoSp.stop();
+              // }, 300);
             }
 
             //if (gamma == old_gamma) {
