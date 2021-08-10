@@ -54,13 +54,13 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">3.02</span><br/>
+      版本:<span id="version">3.03</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
     <script type="text/javascript">
         let bubaoSp,              //布寶實體物件
-          bubaoMobileSpeed = 5, //布寶手機陀螺儀控制移動速度
+          bubaoMobileSpeed = 10, //布寶手機陀螺儀控制移動速度
           old_alpha = 0,
           old_gamma = 0,
           BUBAO_SCALE = 0.5,
@@ -86,21 +86,24 @@
               dirText.innerHTML = '右';
               bubaoSp.setDirection('right')
               bubaoSp.vx = bubaoMobileSpeed;
-            } else if ((gamma - old_gamma < 0)||(alpha - old_alpha < 0)) {
+              bubaoSp.play();
+            } else if ((gamma - old_gamma < 0) || (alpha - old_alpha < 0)) {
               dirText.innerHTML = '左';
               bubaoSp.vx = - bubaoMobileSpeed;
               bubaoSp.setDirection('left')
+              bubaoSp.play();
             } else {
               bubaoSp.vx = 0;
+              bubaoSp.stop();
             }
 
             if (gamma == old_gamma) {
               //bubaoSp.vx += 0;
-              bubaoSp.stop();
+              //bubaoSp.stop();
             } else if (gamma != old_gamma) {
               //bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
               //let delta = (gamma - old_gamma);
-              bubaoSp.play();
+              //bubaoSp.play();
             }
 
             old_alpha = alpha;
