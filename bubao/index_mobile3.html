@@ -54,7 +54,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">3.07</span><br/>
+      版本:<span id="version">3.08</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -167,7 +167,7 @@
           count_money = 0,        //計算得分
           screenWidth = window.innerWidth,    //螢幕寬
           screenHeight = window.innerHeight,  //螢幕高
-          bubaoKeyboardSpeed = 10,               //玩家鍵盤速度
+          bubaoKeyboardSpeed = 8,             //玩家鍵盤速度
           bubao_old_x = 0,
           app = new PIXI.Application({
             width: screenWidth,
@@ -363,7 +363,7 @@
               }
             }
             app.ticker.add((delta) => {
-              bubaoSp.animationSpeed = 0.5
+              bubaoSp.animationSpeed = 0.1
             })
 
           }
