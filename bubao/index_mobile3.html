@@ -54,13 +54,13 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">3.06</span><br/>
+      版本:<span id="version">3.07</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
     <script type="text/javascript">
         let bubaoSp,              //布寶實體物件
-          bubaoMobileSpeed = 10, //布寶手機陀螺儀控制移動速度
+          bubaoMobileSpeed = 8, //布寶手機陀螺儀控制移動速度
           old_alpha = 0,
           old_gamma = 0,
           BUBAO_SCALE = 0.5,
@@ -363,7 +363,7 @@
               }
             }
             app.ticker.add((delta) => {
-              bubaoSp.animationSpeed = 0.3
+              bubaoSp.animationSpeed = 0.5
             })
 
           }
