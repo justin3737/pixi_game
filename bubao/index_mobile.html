@@ -51,7 +51,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">3.22</span><br/>
+      版本:<span id="version">3.32</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -80,13 +80,14 @@
               bubaoSp.play();
 
             if (gamma - old_gamma > 0) {
-              bubaoSp.setDirection('right')
               bubaoSp.vx = bubaoMobileSpeed;
+              bubaoSp.setDirection('right')
             } else if (gamma - old_gamma < 0) {
               bubaoSp.vx = - bubaoMobileSpeed;
               bubaoSp.setDirection('left')
             } else {
               bubaoSp.vx = 0;
+              bubaoSp.stop();
             }
 
             old_alpha = alpha;
@@ -216,26 +217,21 @@
             return Math.floor(Math.random() * (max - min)) + min
           }
 
-          // function isStop(sp, pos) {
-          //   this._old_pos_x = 0;
-          //   isStopArr.psuh(1)
-          //   this._old_pos_x = sp;
-          // }
-
           function update() {
+            //執行布寶動畫更新
             bubaoSp.updateSprite();
 
             //錢錢forEach處理
             moneys.children.forEach(obj => {
               obj.position.y += 4;
               if (obj.position.y >= screenHeight) {
-                  moneys.removeChild(obj);
+                moneys.removeChild(obj);
               }
               //碰撞检测
               if (b.hitTestCircle(obj, bubaoSp, true)) {
-                  moneys.removeChild(obj);
-                  count_money += 1
-                  numberText.text=count_money;
+                moneys.removeChild(obj);
+                count_money += 1
+                numberText.text=count_money;
               }
             });
 
@@ -266,12 +262,7 @@
             };
 
             bubaoSp = new BuBao(textureArray);
-
             app.stage.addChild(bubaoSp);
-
-            app.ticker.add((delta) => {
-              bubaoSp.animationSpeed = 0.1
-            })
           }
 
         }
@@ -291,15 +282,16 @@
             this.resource_scale = 0.5;
             this.moveSpeed = 8;
             this.last_position_x = 0;
-            this.screenwWidth = window.innerWidth;
+            this.screenWidth = window.innerWidth;
             this.screenHeight = window.innerHeight;
+            this.animationSpeed = 0.35;
             this.init();
           }
 
           init() {
             //出場位置
-            this.position.x = (this.screenwWidth - 120) / 2;
-            this.position.y =this.screenHeight - 120 - 20;
+            this.position.x = (this.screenWidth - 120) / 2;
+            this.position.y = this.screenHeight - 120 - 20;
 
             //鍵盤事件
             let left = keyboard(37),
@@ -331,10 +323,10 @@
             this.position.y += this.vy;
 
             //避免超出畫布
-            if (this.position.x <= 0) {
+            if (this.position.x - this.width/2 <= 0) {
               this.position.x = this.width/2;
             }
-            if (this.position.x >= this.screenWidth) {
+            if (this.position.x + this.width/2 >= this.screenWidth) {
               this.position.x = this.screenWidth - this.width/2;
             }
             if (this.position.y <=0 ) {
