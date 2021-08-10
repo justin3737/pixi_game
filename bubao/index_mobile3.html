@@ -51,7 +51,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">3.23</span><br/>
+      版本:<span id="version">3.24</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -76,8 +76,8 @@
             b.innerHTML = beta;
             g.innerHTML = gamma;
 
-            // if(!bubaoSp.playing)
-            //   bubaoSp.play();
+            if(!bubaoSp.playing)
+              bubaoSp.play();
 
             if (gamma - old_gamma > 0) {
               bubaoSp.vx = bubaoMobileSpeed;
@@ -87,6 +87,7 @@
               bubaoSp.setDirection('left')
             } else {
               bubaoSp.vx = 0;
+              bubaoSp.stop();
             }
 
             old_alpha = alpha;
@@ -333,7 +334,6 @@
             //避免超出畫布
             if (this.position.x <= 0) {
               this.position.x = this.width/2;
-              logText.innerHTML = '超出左邊界'
             }
             if (this.position.x >= this.screenWidth) {
               this.position.x = this.screenWidth - this.width/2;
