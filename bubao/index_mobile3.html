@@ -41,7 +41,6 @@
         #logText {
           height: 150px;
           overflow-y: scroll;
-          color: #000;
         }
     </style>
 </head>
@@ -54,13 +53,13 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">3.09</span><br/>
+      版本:<span id="version">3.10</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
     <script type="text/javascript">
         let bubaoSp,              //布寶實體物件
-          bubaoMobileSpeed = 8, //布寶手機陀螺儀控制移動速度
+          bubaoMobileSpeed = 8,   //布寶手機陀螺儀控制移動速度
           old_alpha = 0,
           old_gamma = 0,
           BUBAO_SCALE = 0.5,
@@ -82,12 +81,14 @@
             b.innerHTML = beta;
             g.innerHTML = gamma;
 
-            bubaoSp.play();
-            if ((gamma - old_gamma > 0) || (alpha - old_alpha > 0)) {
+            if(!bubaoSp.playing)
+              bubaoSp.play();
+
+            if (gamma - old_gamma > 0) {
               dirText.innerHTML = '右';
               bubaoSp.setDirection('right')
               bubaoSp.vx = bubaoMobileSpeed;
-            } else if ((gamma - old_gamma < 0) || (alpha - old_alpha < 0)) {
+            } else if (gamma - old_gamma < 0) {
               dirText.innerHTML = '左';
               bubaoSp.vx = - bubaoMobileSpeed;
               bubaoSp.setDirection('left')
@@ -254,11 +255,18 @@
             return Math.floor(Math.random() * (max - min)) + min
           }
 
+          // function isStop(sp, pos) {
+          //   this._old_pos_x = 0;
+          //   isStopArr.psuh(1)
+          //   this._old_pos_x = sp;
+          // }
+
           function update() {
             bubaoSp.position.x += bubaoSp.vx;
             bubaoSp.position.y += bubaoSp.vy;
 
-            logText.innerHTML = bubaoSp.position.x;
+            //isStop(bubaoSp, bubaoSp.position.x)
+
 
             //避免超出畫布
             if (bubaoSp.position.x <= 0) {
