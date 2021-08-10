@@ -6,6 +6,7 @@
     <title>Bubao小遊戲</title>
     <script src="../pixi.min.js"></script>
     <script src="../bump.js"></script>
+    <script src="../gsap.min.js"></script>
     <!-- use pixi-legacy for unsupported webGL's phone ex: Samsung GALAXY J7
     <script src="../pixi-legacy.min.js"></script>
     -->
@@ -53,7 +54,7 @@
       gamma:<span id="gamma"></span><br/>
       方向:<span id="dirText"></span><br/>
       速度:<span id="speedText"></span><br/>
-      版本:<span id="version">2.10</span><br/>
+      版本:<span id="version">3.01</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -84,17 +85,19 @@
             if(gamma - old_gamma > 0) {
               dirText.innerHTML = '右';
               bubaoSp.setDirection('right')
+              bubaoSp.vx = bubaoMobileSpeed;
             } else if (gamma - old_gamma < 0) {
               dirText.innerHTML = '左';
+              bubaoSp.vx = - bubaoMobileSpeed;
               bubaoSp.setDirection('left')
             }
 
             if (gamma == old_gamma) {
-              bubaoSp.vx += 0;
+              //bubaoSp.vx += 0;
               bubaoSp.stop();
             } else if (gamma != old_gamma) {
-              bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
-              let delta = (gamma - old_gamma);
+              //bubaoSp.vx += (gamma - old_gamma) / bubaoMobileSpeed;
+              //let delta = (gamma - old_gamma);
               bubaoSp.play();
             }
 
@@ -153,6 +156,7 @@
           return mobileDevice.some(e => navigator.userAgent.match(e))
         }
         function init() {
+          console.log(typeof TweenMax)
           if (isMobileDevice()) {
             //顯示取得手機陀螺儀授權按鈕
             document.getElementById('accelPermsButton').style.display = 'block';
