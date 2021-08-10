@@ -32,8 +32,8 @@
           position: absolute;
           display: none;
           top: 30px;
-          left: calc((100% - 140px) /2);
-          width: 140px;
+          left: calc((100% - 150px) /2);
+          width: 150px;
           font-size: 13px;
         }
 
@@ -45,68 +45,66 @@
 </head>
 <body onload="init();">
     <div id="box" class="box"></div>
-    <button id="accelPermsButton" onclick="getAccel()">取得手機陀螺儀授權</button>
+    <button id="accelPermsButton" onclick="getPermision()">使用手機陀螺儀進行遊戲</button>
     <div class="info">
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">1.29</span><br/>
-      log:<span id="logText"></span><br/>
+      版本:<span id="version">3.13</span><br/>
     </div>
 </body>
     <script type="text/javascript">
         let bubaoSp,              //布寶實體物件
-          bubaoMobileSpeed = 5, //布寶手機陀螺儀控制移動速度
+          bubaoMobileSpeed = 8,   //布寶手機陀螺儀控制移動速度
           old_alpha = 0,
           old_gamma = 0,
-          delta = 0,
-          BUBAO_SCALE = 0.5
-          timeOutID;
+          logText = document.getElementById('logText');
 
         function getAccel() {
-          if(window.DeviceOrientationEvent) {
-            DeviceMotionEvent.requestPermission().then(response => {
+          document.getElementById('accelPermsButton').style.display = 'none';
+          window.addEventListener('deviceorientation', function(event) {
+            var a = document.getElementById('alpha'),
+                b = document.getElementById('beta'),
+                g = document.getElementById('gamma'),
+                dirText = document.getElementById('dirText'),
+                speedText = document.getElementById('speedText'),
+                alpha = Math.round(event.alpha),
+                beta = Math.round(event.beta),
+                gamma = Math.round(event.gamma);
+
+            a.innerHTML = alpha;
+            b.innerHTML = beta;
+            g.innerHTML = gamma;
+
+            if(!bubaoSp.playing)
+              bubaoSp.play();
+
+            if (gamma - old_gamma > 0) {
+              dirText.innerHTML = '右';
+              bubaoSp.setDirection('right')
+              bubaoSp.vx = bubaoMobileSpeed;
+            } else if (gamma - old_gamma < 0) {
+              dirText.innerHTML = '左';
+              bubaoSp.vx = - bubaoMobileSpeed;
+              bubaoSp.setDirection('left')
+            } else {
+              bubaoSp.vx = 0;
+            }
+
+            old_alpha = alpha;
+            old_gamma = gamma;
+
+          }, false);
+        }
+        function getPermision() {
+          if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+            DeviceOrientationEvent.requestPermission().then(response => {
               if (response == 'granted') {
-                document.getElementById('accelPermsButton').style.display = 'none';
-                window.addEventListener('deviceorientation', function(event) {
-                  var a = document.getElementById('alpha'),
-                      b = document.getElementById('beta'),
-                      g = document.getElementById('gamma'),
-                      logText = document.getElementById('logText'),
-                      alpha = Math.round(event.alpha),
-                      beta = Math.round(event.beta),
-                      gamma = Math.round(event.gamma);
-
-                  a.innerHTML = alpha;
-                  b.innerHTML = beta;
-                  g.innerHTML = gamma;
-
-                  delta = (gamma - old_gamma);
-                  logText.innerHTML = 'delta: ' + delta
-
-                  if(delta > 0) {
-                    bubaoSp.setDirection('right')
-                    bubaoSp.vx = bubaoMobileSpeed;
-                    bubaoSp.play();
-                  } else if (delta < 0) {
-                    bubaoSp.setDirection('left')
-                    bubaoSp.vx = - bubaoMobileSpeed;
-                    bubaoSp.play();
-                  } else if (delta === 0){
-                    timeOutID = setTimeout(() => {
-                      bubaoSp.vx = 0;
-                      bubaoSp.stop();
-                      timeOutID = null;
-                      clearTimeout(timeOutID);
-                    }, 200);
-                  }
-
-                  old_alpha = alpha;
-                  old_gamma = gamma;
-
-                }, false);
+                getAccel();
               }
             });
+          } else {
+            getAccel();
           }
         }
         function keyboard(keyCode) {
@@ -144,9 +142,8 @@
           return key;
         }
         function isMobileDevice() {
-          const mobileDevice = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone']
-          let isMobileDevice = mobileDevice.some(e => navigator.userAgent.match(e))
-          return isMobileDevice
+          let mobileDevice = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone']
+          return mobileDevice.some(e => navigator.userAgent.match(e))
         }
         function init() {
           if (isMobileDevice()) {
@@ -165,8 +162,6 @@
           count_money = 0,        //計算得分
           screenWidth = window.innerWidth,    //螢幕寬
           screenHeight = window.innerHeight,  //螢幕高
-          bubaoKeyboardSpeed = 10,               //玩家鍵盤速度
-          bubao_old_x = 0,
           app = new PIXI.Application({
             width: screenWidth,
             height: screenHeight,
@@ -213,35 +208,6 @@
             //錢錢容器的x軸
             moneys.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2)
 
-            //鍵盤事件
-            var left = keyboard(37);
-            var up = keyboard(38);
-            var right = keyboard(39);
-            var down = keyboard(40);
-            left.press = () => {
-              bubaoSp.vx = - bubaoKeyboardSpeed;
-              bubaoSp.vy = 0;
-              bubaoSp.setDirection('left')
-              bubaoSp.play();
-            };
-            left.release = () => {
-              bubaoSp.vx = 0;
-              bubaoSp.vy = 0;
-              bubaoSp.stop();
-            };
-
-            right.press = () => {
-              bubaoSp.vx = bubaoKeyboardSpeed;
-              bubaoSp.vy = 0;
-              bubaoSp.setDirection('right')
-              bubaoSp.play();
-            };
-            right.release = () => {
-              bubaoSp.vx = 0;
-              bubaoSp.vy = 0;
-              bubaoSp.stop();
-            };
-
             //創建錢錢的time
             create_money_time=0;
 
@@ -251,6 +217,12 @@
           function r(min, max) {
             return Math.floor(Math.random() * (max - min)) + min
           }
+
+          // function isStop(sp, pos) {
+          //   this._old_pos_x = 0;
+          //   isStopArr.psuh(1)
+          //   this._old_pos_x = sp;
+          // }
 
           function update() {
             bubaoSp.position.x += bubaoSp.vx;
@@ -300,31 +272,6 @@
             requestAnimationFrame(update);
           }
 
-          function onDragStart(e) {
-            bubaoSp.x = e.data.global.x - bubaoSp.width/2;
-            bubaoSp.dragging = true;
-            bubaoSp.play();
-          }
-
-          function onDragMove(e) {
-            if (bubaoSp.dragging) {
-              bubaoSp.play();
-              bubaoSp.x = e.data.global.x - bubaoSp.width/2;
-              if (bubao_old_x -  e.data.global.x > 0) {
-                bubaoSp.setDirection('left')
-              } else {
-                bubaoSp.setDirection('right')
-              }
-              bubao_old_x = e.data.global.x;
-            }
-          }
-
-          function onDragEnd(e) {
-            bubaoSp.x = e.data.global.x - bubaoSp.width/2;
-            bubaoSp.dragging = false;
-            bubaoSp.stop();
-          }
-
           function CreateAnimatedSp() {
             let bubaoImages = ["../images/bubao_1.png","../images/bubao_2.png","../images/bubao_3.png","../images/bubao_4.png"];
             let textureArray = [];
@@ -335,38 +282,111 @@
               textureArray.push(texture);
             };
 
-            bubaoSp = new PIXI.AnimatedSprite(textureArray);
+            bubaoSp = new BuBao(textureArray);
 
             app.stage.addChild(bubaoSp);
 
-            bubaoSp.anchor.x = 0.5;
-            bubaoSp.circular = true;
-            bubaoSp.width = 120;
-            bubaoSp.height = 120;
-            bubaoSp.position.x = (screenWidth - 120) / 2;
-            bubaoSp.position.y = screenHeight - 120 - 20;
-            bubaoSp.vx = 0;
-            bubaoSp.vy = 0;
-            bubaoSp.interactive = true;
-            bubaoSp.buttonMode = true;
-            bubaoSp.dragging = false;
-            bubaoSp.on('pointerdown', onDragStart)
-            bubaoSp.on('pointermove', onDragMove)
-            bubaoSp.on('pointerup', onDragEnd)
-            bubaoSp.on('pointerupoutside', onDragEnd);
-            bubaoSp.setDirection = function(dir) {
-              if (dir === 'left') {
-                bubaoSp.scale.x = BUBAO_SCALE * -1
-              } else {
-                bubaoSp.scale.x = BUBAO_SCALE * 1
-              }
-            }
             app.ticker.add((delta) => {
-              bubaoSp.animationSpeed = 0.2
+              bubaoSp.animationSpeed = 0.1
             })
-
           }
 
+        }
+
+        class BuBao extends PIXI.AnimatedSprite {
+          constructor (textures, loop){
+            super(textures, loop);
+            this.width = 120;
+            this.height = 120;
+            this.vx = 0;
+            this.vy = 0;
+            this.interactive = true;
+            this.buttonMode = true;
+            this.dragging = false;
+            this.anchor.x = 0.5;
+            this.circular = true;
+            this.resource_scale = 0.5;
+            this.moveSpeed = 8;
+            this.last_position_x = 0;
+            this.init();
+          }
+
+          init() {
+            //出場位置
+            this.position.x = (window.innerWidth - 120) / 2;
+            this.position.y = window.innerHeight - 120 - 20;
+
+            //鍵盤事件
+            let left = keyboard(37),
+              up = keyboard(38),
+              right = keyboard(39),
+              down = keyboard(40);
+            left.press = () => {
+              this.runing(-this.moveSpeed);
+            };
+            left.release = () => {
+              this.runing(0);
+            };
+            right.press = () => {
+              this.runing(this.moveSpeed);
+            };
+            right.release = () => {
+              this.runing(0);
+            };
+
+            //觸碰事件
+            this.on('pointerdown', this.onDragStart)
+            this.on('pointermove', this.onDragMove)
+            this.on('pointerup', this.onDragEnd)
+            this.on('pointerupoutside', this.onDragEnd);
+          }
+
+          setDirection(dir) {
+            if (dir === 'left') {
+              this.scale.x = this.resource_scale * -1;
+            } else {
+              this.scale.x = this.resource_scale * 1;
+            }
+          }
+
+          runing(deltaX) {
+            if (!deltaX) {
+              this.vx = 0;
+              this.stop();
+            } else {
+              if (deltaX < 0) {
+                this.setDirection('left')
+              } else if(deltaX > 0) {
+                this.setDirection('right')
+              }
+              this.vx += deltaX;
+              this.play();
+            }
+          }
+
+          onDragStart(e) {
+            this.x = e.data.global.x - this.width/2;
+            this.dragging = true;
+            this.play();
+          }
+
+          onDragMove(e) {
+            if (this.dragging) {
+              this.x = e.data.global.x - this.width/2;
+              if (this.last_position_x -  e.data.global.x > 0) {
+                this.setDirection('left')
+              } else {
+                this.setDirection('right')
+              }
+              this.last_position_x = e.data.global.x;
+            }
+          }
+
+          onDragEnd(e) {
+            this.x = e.data.global.x - this.width/2;
+            this.dragging = false;
+            this.stop();
+          }
         }
     </script>
 </html>
