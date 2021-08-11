@@ -51,7 +51,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">3.57</span><br/>
+      版本:<span id="version">3.58</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -77,13 +77,16 @@
             g.innerHTML = gamma;
 
             if (gamma - old_gamma > 0) {
-              bubaoSp.vx = bubaoMobileSpeed;
+              //bubaoSp.vx = bubaoMobileSpeed;
               bubaoSp.setDirection('right')
+              bubaoSp.running(bubaoMobileSpeed)
             } else if (gamma - old_gamma < 0) {
-              bubaoSp.vx = - bubaoMobileSpeed;
+              //bubaoSp.vx = - bubaoMobileSpeed;
               bubaoSp.setDirection('left')
+              bubaoSp.running(-bubaoMobileSpeed)
             } else {
-              bubaoSp.vx = 0;
+              //bubaoSp.vx = 0;
+              bubaoSp.running(0)
             }
 
             old_alpha = alpha;
@@ -379,10 +382,8 @@
           running(deltaX) {
             if (!deltaX) {
               this.vx = 0;
-              //this.stop();
             } else {
               this.vx += deltaX;
-              //this.play();
             }
           }
 
