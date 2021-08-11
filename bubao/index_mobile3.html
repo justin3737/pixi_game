@@ -300,12 +300,14 @@
               down = keyboard(40);
             left.press = () => {
               this.running(-this.moveSpeed);
+              this.setDirection('left')
             };
             left.release = () => {
               this.running(0);
             };
             right.press = () => {
               this.running(this.moveSpeed);
+              this.setDirection('right')
             };
             right.release = () => {
               this.running(0);
@@ -350,11 +352,6 @@
               this.vx = 0;
               this.stop();
             } else {
-              if (deltaX < 0) {
-                this.setDirection('left')
-              } else if(deltaX > 0) {
-                this.setDirection('right')
-              }
               this.vx += deltaX;
               this.play();
             }
