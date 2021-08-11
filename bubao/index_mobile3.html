@@ -79,8 +79,6 @@
             if(!bubaoSp.playing)
               bubaoSp.play();
 
-            logText.innerHTML = gamma - old_gamma;
-
             if (gamma - old_gamma > 0) {
               bubaoSp.vx = bubaoMobileSpeed;
               bubaoSp.setDirection('right')
@@ -286,7 +284,7 @@
             this.last_position_x = 0;
             this.screenWidth = window.innerWidth;
             this.screenHeight = window.innerHeight;
-            this.animationSpeed = 0.2;
+            this.animationSpeed = 0.35;
             this.dir = 'right';
             this.init();
           }
