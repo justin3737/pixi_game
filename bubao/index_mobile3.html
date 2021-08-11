@@ -51,7 +51,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">3.61</span><br/>
+      版本:<span id="version">3.62</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -109,7 +109,6 @@
           key.isUp = true;
           key.press = undefined;
           key.release = undefined;
-          //The `downHandler`
           key.downHandler = event => {
             if (event.keyCode === key.code) {
                 if (key.isUp && key.press) key.press();
@@ -118,7 +117,6 @@
             }
             event.preventDefault();
           };
-          //The `upHandler`
           key.upHandler = event => {
             if (event.keyCode === key.code) {
               if (key.isDown && key.release) key.release();
@@ -127,7 +125,6 @@
             }
             event.preventDefault();
           };
-          //Attach event listeners
           window.addEventListener(
             "keydown", key.downHandler.bind(key), false
           );
@@ -139,6 +136,9 @@
         function isMobileDevice() {
           let mobileDevice = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone']
           return mobileDevice.some(e => navigator.userAgent.match(e))
+        }
+        function r(min, max) {
+          return Math.floor(Math.random() * (max - min)) + min
         }
         function init() {
           if (isMobileDevice()) {
@@ -201,16 +201,12 @@
             moneys = new PIXI.Container();
             app.stage.addChild(moneys);
             //錢錢容器的x軸
-            moneys.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2)
+            moneys.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2);
 
             //創建錢錢的time
             create_money_time=0;
 
             requestAnimationFrame(update);
-          }
-
-          function r(min, max) {
-            return Math.floor(Math.random() * (max - min)) + min
           }
 
           function update() {
@@ -227,19 +223,14 @@
               if (b.hitTestCircle(obj, bubaoSp, true)) {
                 moneys.removeChild(obj);
                 count_money += 1
-                numberText.text=count_money;
+                numberText.text = count_money;
               }
             });
 
             //每隔一段时间，增加一個錢錢
             create_money_time++;
             if (create_money_time >= 50) {
-              money = new PIXI.Sprite(moneyTexture);
-              money.width = 50;
-              money.height = 50;
-              money.position.x = r(0, 512);
-              money.position.y = 0;
-              money.circular = true;
+              money = new TreePoint(moneyTexture);
               moneys.addChild(money);
               create_money_time = 0;
             }
@@ -261,6 +252,18 @@
             app.stage.addChild(bubaoSp);
           }
 
+        }
+
+        class TreePoint extends PIXI.Sprite {
+          constructor (textures, loop){
+            super(textures, loop);
+            this.width = 50;
+            this.height = 50;
+            this.positio_max_x = window.innerWidth < 480? (window.innerWidth - this.width) : ((window.innerWidth - 600)/2);
+            this.position.x = r(0, this.positio_max_x);
+            this.position.y = 0;
+            this.circular = true;
+          }
         }
 
         class BuBao extends PIXI.AnimatedSprite {
@@ -302,14 +305,14 @@
               down = keyboard(40);
             left.press = () => {
               this.running(this.moveSpeed * -1);
-              this.setDirection('left')
+              this.scale.x = this.resource_scale * -1;
             };
             left.release = () => {
               this.running(0);
             };
             right.press = () => {
               this.running(this.moveSpeed);
-              this.setDirection('right')
+              this.scale.x = this.resource_scale;
             };
             right.release = () => {
               this.running(0);
@@ -394,9 +397,9 @@
             if (this.dragging) {
               this.x = e.data.global.x - this.width/2;
               if (this.last_position_x -  e.data.global.x > 0) {
-                this.setDirection('left')
+                this.scale.x = this.resource_scale * -1;
               } else {
-                this.setDirection('right')
+                this.scale.x = this.resource_scale * 1;
               }
               this.last_position_x = e.data.global.x;
             }
