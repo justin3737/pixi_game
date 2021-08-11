@@ -51,7 +51,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">3.40</span><br/>
+      版本:<span id="version">3.41</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -87,7 +87,7 @@
               bubaoSp.setDirection('left')
             } else {
               bubaoSp.vx = 0;
-              bubaoSp.stop();
+              //bubaoSp.stop();
             }
 
             old_alpha = alpha;
@@ -284,7 +284,7 @@
             this.last_position_x = 0;
             this.screenWidth = window.innerWidth;
             this.screenHeight = window.innerHeight;
-            this.animationSpeed = 0.35;
+            this.animationSpeed = 0.15;
             this.dir = 'right';
             this.init();
           }
