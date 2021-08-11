@@ -51,7 +51,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">3.55</span><br/>
+      版本:<span id="version">3.56</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -323,6 +323,13 @@
           }
 
           stopOrPlay(pos) {
+            if (this.position_last_x  - pos > 0) {
+              logText.innerHTML = '左';
+            } else {
+              logText.innerHTML = '右';
+            }
+
+            //play() or stop()
             if (this.position_last_x === pos) {
               this.position_count += 1;
                //觸發Stop()不至於太過靈敏
