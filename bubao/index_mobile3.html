@@ -61,6 +61,7 @@
           bubaoMobileSpeed = 8,   //布寶手機陀螺儀控制移動速度
           old_alpha = 0,
           old_gamma = 0,
+          loop = true,            //決定遊戲是否繼續進行或終止
           logText = document.getElementById('logText');
 
         function getAccel() {
@@ -77,14 +78,16 @@
             b.innerHTML = beta;
             g.innerHTML = gamma;
 
-            if (gamma - old_gamma > 0) {
-              bubaoSp.vx = bubaoMobileSpeed;
-              bubaoSp.setDirection('right')
-            } else if (gamma - old_gamma < 0) {
-              bubaoSp.vx = bubaoMobileSpeed * -1;
-              bubaoSp.setDirection('left')
-            } else {
-              bubaoSp.running(0);
+            if (loop) {
+              if (gamma - old_gamma > 0) {
+                bubaoSp.vx = bubaoMobileSpeed;
+                bubaoSp.setDirection('right')
+              } else if (gamma - old_gamma < 0) {
+                bubaoSp.vx = bubaoMobileSpeed * -1;
+                bubaoSp.setDirection('left')
+              } else {
+                bubaoSp.running(0);
+              }
             }
 
             old_alpha = alpha;
@@ -154,7 +157,6 @@
 
           let b = new Bump(PIXI), //碰撞偵測
           countdown = 15,         //遊戲時間
-          loop = true,            //決定遊戲是否繼續進行或終止
           cdTimer = new EE3Timer.Timer(1000),
           money,
           moneys,
@@ -270,12 +272,8 @@
             app.stage.addChild(cdTxt);
 
             cdTimer.repeat = countdown;
-            cdTimer.on('start', elapsed => {
-              //console.log('start');
-            });
             cdTimer.on('end', elapsed => {
               loop = false;
-              //console.log('end', elapsed);
             });
             cdTimer.on('repeat', (elapsed, repeat) => {
               countdown --;
