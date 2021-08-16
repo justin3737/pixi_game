@@ -6,6 +6,7 @@
     <title>Bubao小遊戲</title>
     <script src="../pixi.min.js"></script>
     <script src="../bump.js"></script>
+    <script src="../eventemitter3-timer.min.js"></script>
     <!-- use pixi-legacy for unsupported webGL's phone ex: Samsung GALAXY J7
     <script src="../pixi-legacy.min.js"></script>
     -->
@@ -51,7 +52,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">3.63</span><br/>
+      版本:<span id="version">4.01</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -152,6 +153,9 @@
           PIXI.utils.sayHello(type);
 
           let b = new Bump(PIXI), //碰撞偵測
+          countdown = 15,         //遊戲時間
+          loop = true,            //決定遊戲是否繼續進行或終止
+          cdTimer = new EE3Timer.Timer(1000),
           money,
           moneys,
           count_money = 0,        //計算得分
@@ -185,6 +189,9 @@
             //建立布寶動畫
             CreateAnimatedSp();
 
+            //加入倒數數字
+            CreateCountDowntimer();
+
             //顯示賺了多少錢
             const style = new PIXI.TextStyle({
               fontSize: 20,
@@ -210,32 +217,36 @@
           }
 
           function update() {
-            //執行布寶動畫更新
-            bubaoSp.updateSprite();
+            if (loop) {
+              //執行布寶動畫更新
+              bubaoSp.updateSprite();
 
-            //錢錢forEach處理
-            moneys.children.forEach(obj => {
-              obj.position.y += 4;
-              if (obj.position.y >= screenHeight) {
-                moneys.removeChild(obj);
-              }
-              //碰撞检测
-              if (b.hitTestCircle(obj, bubaoSp, true)) {
-                moneys.removeChild(obj);
-                count_money += 1
-                numberText.text = count_money;
-              }
-            });
+              //錢錢forEach處理
+              moneys.children.forEach(obj => {
+                obj.position.y += 4;
+                if (obj.position.y >= screenHeight) {
+                  moneys.removeChild(obj);
+                }
+                //碰撞检测
+                if (b.hitTestCircle(obj, bubaoSp, true)) {
+                  moneys.removeChild(obj);
+                  count_money += 1
+                  numberText.text = count_money;
+                }
+              });
 
-            //每隔一段时间，增加一個錢錢
-            create_money_time++;
-            if (create_money_time >= 50) {
-              money = new TreePoint(moneyTexture);
-              moneys.addChild(money);
-              create_money_time = 0;
+              //每隔一段时间，增加一個錢錢
+              create_money_time++;
+              if (create_money_time >= 50) {
+                money = new TreePoint(moneyTexture);
+                moneys.addChild(money);
+                create_money_time = 0;
+              }
+
+              requestAnimationFrame(update);
+            } else {
+              bubaoSp.stop();
             }
-
-            requestAnimationFrame(update);
           }
 
           function CreateAnimatedSp() {
@@ -252,7 +263,31 @@
             app.stage.addChild(bubaoSp);
           }
 
+          function CreateCountDowntimer() {
+            const cdTxt = new PIXI.Text(countdown, {fontFamily : 'Arial', fontSize: 24, fill : 0xffffff, align : 'center' });
+            cdTxt.position.x = window.innerWidth - 30 - cdTxt.width;
+            cdTxt.position.y = 30;
+            app.stage.addChild(cdTxt);
+
+            cdTimer.repeat = countdown;
+            cdTimer.on('start', elapsed => {
+              //console.log('start');
+            });
+            cdTimer.on('end', elapsed => {
+              loop = false;
+              //console.log('end', elapsed);
+            });
+            cdTimer.on('repeat', (elapsed, repeat) => {
+              countdown --;
+              cdTxt.text = countdown;
+            });
+            cdTimer.start();
+            app.ticker.add(() => {
+              cdTimer.timerManager.update(app.ticker.elapsedMS);
+            }, this);
+          }
         }
+
 
         class TreePoint extends PIXI.Sprite {
           constructor (textures, loop){
