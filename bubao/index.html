@@ -52,7 +52,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">4.02</span><br/>
+      版本:<span id="version">4.03</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -62,9 +62,11 @@
           old_alpha = 0,
           old_gamma = 0,
           loop = true,            //決定遊戲是否繼續進行或終止
-          logText = document.getElementById('logText');
+          logText = document.getElementById('logText'),
+          cdTimer;
 
         function getAccel() {
+          cdTimer.start();
           document.getElementById('accelPermsButton').style.display = 'none';
           window.addEventListener('deviceorientation', function(event) {
             var a = document.getElementById('alpha'),
@@ -157,7 +159,6 @@
 
           let b = new Bump(PIXI), //碰撞偵測
           countdown = 15,         //遊戲時間
-          cdTimer = new EE3Timer.Timer(1000),
           money,
           moneys,
           count_money = 0,        //計算得分
@@ -271,6 +272,7 @@
             cdTxt.position.y = 30;
             app.stage.addChild(cdTxt);
 
+            cdTimer = new EE3Timer.Timer(1000);
             cdTimer.repeat = countdown;
             cdTimer.on('end', elapsed => {
               loop = false;
@@ -279,7 +281,6 @@
               countdown --;
               cdTxt.text = countdown;
             });
-            cdTimer.start();
             app.ticker.add(() => {
               cdTimer.timerManager.update(app.ticker.elapsedMS);
             }, this);
