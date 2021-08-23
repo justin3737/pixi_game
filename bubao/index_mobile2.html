@@ -52,7 +52,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">4.03</span><br/>
+      版本:<span id="version">4.04</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -159,8 +159,8 @@
 
           let b = new Bump(PIXI), //碰撞偵測
           countdown = 15,         //遊戲時間
-          money,
-          moneys,
+          fallContainers,
+          fallObjArr = [],        //掉落物品陣列
           count_money = 0,        //計算得分
           screenWidth = window.innerWidth,    //螢幕寬
           screenHeight = window.innerHeight,  //螢幕高
@@ -180,7 +180,11 @@
                 "../images/bubao_2.png",
                 "../images/bubao_3.png",
                 "../images/bubao_4.png",
-                "../images/point.png"
+                "../images/point.png",
+                "../images/fall_1.png",
+                "../images/fall_2.png",
+                "../images/fall_3.png",
+                "../images/fall_4.png"
             ])
             .on("progress", loadProgressHandler)
             .load(setup);
@@ -207,11 +211,21 @@
 
             //錢錢
             moneyTexture = PIXI.Texture.from("../images/point.png");
-            //錢錢容器
-            moneys = new PIXI.Container();
-            app.stage.addChild(moneys);
-            //錢錢容器的x軸
-            moneys.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2);
+            //掉落物品
+            fall_1Texture = PIXI.Texture.from("../images/fall_1.png");
+            fall_2Texture = PIXI.Texture.from("../images/fall_2.png");
+            fall_3Texture = PIXI.Texture.from("../images/fall_3.png");
+            fall_4Texture = PIXI.Texture.from("../images/fall_4.png");
+            fallObjArr = [fall_1Texture, fall_2Texture, fall_3Texture, fall_4Texture]
+
+            //掉落物容器
+            fallcontainers = new PIXI.Container();
+            app.stage.addChild(fallcontainers);
+            //掉落物容器的x軸
+            fallcontainers.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2);
+
+             //創建掉落物的time
+             create_fallobj_time=0;
 
             //創建錢錢的time
             create_money_time=0;
@@ -224,26 +238,27 @@
               //執行布寶動畫更新
               bubaoSp.updateSprite();
 
-              //錢錢forEach處理
-              moneys.children.forEach(obj => {
+              //掉落物forEach處理
+              fallcontainers.children.forEach(obj => {
                 obj.position.y += 4;
                 if (obj.position.y >= screenHeight) {
-                  moneys.removeChild(obj);
+                  fallcontainers.removeChild(obj);
                 }
                 //碰撞检测
                 if (b.hitTestCircle(obj, bubaoSp, true)) {
-                  moneys.removeChild(obj);
-                  count_money += 1
-                  numberText.text = count_money;
+                  fallcontainers.removeChild(obj);
+                  //count_money += 1
+                  //numberText.text = count_money;
                 }
               });
 
-              //每隔一段时间，增加一個錢錢
-              create_money_time++;
-              if (create_money_time >= 50) {
-                money = new TreePoint(moneyTexture);
-                moneys.addChild(money);
-                create_money_time = 0;
+              //每隔一段时间，增加一個掉落物品
+              create_fallobj_time++;
+              if (create_fallobj_time >= 50) {
+                let _no = r(0, fallObjArr.length)
+                _fall = new TreePoint(fallObjArr[_no]);
+                fallcontainers.addChild(_fall);
+                create_fallobj_time = 0;
               }
 
               requestAnimationFrame(update);
