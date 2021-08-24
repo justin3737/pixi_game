@@ -52,7 +52,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">4.04</span><br/>
+      版本:<span id="version">4.06</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -157,12 +157,14 @@
           }
           PIXI.utils.sayHello(type);
 
-          let b = new Bump(PIXI), //碰撞偵測
-          countdown = 15,         //遊戲時間
-          moneyContainer,         //錢錢容器
-          fallContainers,         //掉落物容器
-          fallObjArr = [],        //掉落物品陣列
-          count_money = 0,        //計算得分
+          let b = new Bump(PIXI),       //碰撞偵測
+          countdown = 15,               //遊戲時間
+          maxTime = countdown,
+          moneyContainer,               //錢錢容器
+          moneyShowSec = [0,1,7,12,13], //錢錢出現的秒數
+          fallContainers,               //掉落物容器
+          fallObjArr = [],              //掉落物品陣列
+          count_money = 0,              //計算得分
           screenWidth = window.innerWidth,    //螢幕寬
           screenHeight = window.innerHeight,  //螢幕高
           app = new PIXI.Application({
@@ -234,7 +236,6 @@
 
             //創建錢錢的time
             create_money_time=0;
-
             requestAnimationFrame(update);
           }
 
@@ -265,13 +266,14 @@
               }
             });
 
-            //每隔一段时间，增加一個Tree Point
-            create_money_time++;
-            if (create_money_time >= 100) {
-              let _money = new TreePoint(moneyTexture);
+            //每隔幾秒时间，增加一個Tree Point
+            let currSec = maxTime - countdown;
+            if (moneyShowSec.includes(currSec)) {
+              moneyShowSec.shift();
+              let _money = new PureIMG(moneyTexture);
               moneyContainer.addChild(_money);
-              create_money_time = 0;
             }
+
           }
 
           function updateFallObject() {
@@ -291,7 +293,7 @@
             create_fallobj_time++;
             if (create_fallobj_time >= 50) {
               let _no = r(0, fallObjArr.length)
-              _fall = new TreePoint(fallObjArr[_no]);
+              _fall = new PureIMG(fallObjArr[_no]);
               fallcontainers.addChild(_fall);
               create_fallobj_time = 0;
             }
@@ -333,7 +335,7 @@
         }
 
 
-        class TreePoint extends PIXI.Sprite {
+        class PureIMG extends PIXI.Sprite {
           constructor (textures, loop){
             super(textures, loop);
             this.width = 50;
