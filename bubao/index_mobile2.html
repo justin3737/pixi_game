@@ -159,7 +159,8 @@
 
           let b = new Bump(PIXI), //碰撞偵測
           countdown = 15,         //遊戲時間
-          fallContainers,
+          moneyContainer,         //錢錢容器
+          fallContainers,         //掉落物容器
           fallObjArr = [],        //掉落物品陣列
           count_money = 0,        //計算得分
           screenWidth = window.innerWidth,    //螢幕寬
@@ -221,11 +222,15 @@
             //掉落物容器
             fallcontainers = new PIXI.Container();
             app.stage.addChild(fallcontainers);
-            //掉落物容器的x軸
             fallcontainers.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2);
 
-             //創建掉落物的time
-             create_fallobj_time=0;
+            //創建掉落物的time
+            create_fallobj_time=0;
+
+            //錢錢容器
+            moneyContainer = new PIXI.Container();
+            app.stage.addChild(moneyContainer);
+            moneyContainer.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2);
 
             //創建錢錢的time
             create_money_time=0;
@@ -237,33 +242,58 @@
             if (loop) {
               //執行布寶動畫更新
               bubaoSp.updateSprite();
-
-              //掉落物forEach處理
-              fallcontainers.children.forEach(obj => {
-                obj.position.y += 4;
-                if (obj.position.y >= screenHeight) {
-                  fallcontainers.removeChild(obj);
-                }
-                //碰撞检测
-                if (b.hitTestCircle(obj, bubaoSp, true)) {
-                  fallcontainers.removeChild(obj);
-                  //count_money += 1
-                  //numberText.text = count_money;
-                }
-              });
-
-              //每隔一段时间，增加一個掉落物品
-              create_fallobj_time++;
-              if (create_fallobj_time >= 50) {
-                let _no = r(0, fallObjArr.length)
-                _fall = new TreePoint(fallObjArr[_no]);
-                fallcontainers.addChild(_fall);
-                create_fallobj_time = 0;
-              }
-
+              updateFallObject();
+              updateMoney();
               requestAnimationFrame(update);
             } else {
               bubaoSp.stop();
+            }
+          }
+
+          function updateMoney() {
+            //掉落物forEach處理
+            moneyContainer.children.forEach(obj => {
+              obj.position.y += 15;
+              if (obj.position.y >= screenHeight) {
+                moneyContainer.removeChild(obj);
+              }
+              //碰撞检测
+              if (b.hitTestCircle(obj, bubaoSp, true)) {
+                moneyContainer.removeChild(obj);
+                count_money += 1
+                numberText.text = count_money;
+              }
+            });
+
+            //每隔一段时间，增加一個Tree Point
+            create_money_time++;
+            if (create_money_time >= 100) {
+              let _money = new TreePoint(moneyTexture);
+              moneyContainer.addChild(_money);
+              create_money_time = 0;
+            }
+          }
+
+          function updateFallObject() {
+            //掉落物forEach處理
+            fallcontainers.children.forEach(obj => {
+              obj.position.y += 4;
+              if (obj.position.y >= screenHeight) {
+                fallcontainers.removeChild(obj);
+              }
+              //碰撞检测
+              if (b.hitTestCircle(obj, bubaoSp, true)) {
+                fallcontainers.removeChild(obj);
+              }
+            });
+
+            //每隔一段时间，增加一個掉落物品
+            create_fallobj_time++;
+            if (create_fallobj_time >= 50) {
+              let _no = r(0, fallObjArr.length)
+              _fall = new TreePoint(fallObjArr[_no]);
+              fallcontainers.addChild(_fall);
+              create_fallobj_time = 0;
             }
           }
 
