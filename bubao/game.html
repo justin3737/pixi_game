@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bubao小遊戲</title>
+  <script src="../pixi.min.js"></script>
+  <script src="../bump.js"></script>
+  <script src="../eventemitter3-timer.min.js"></script>
+  <!-- use pixi-legacy for unsupported webGL's phone ex: Samsung GALAXY J7
+  <script src="../pixi-legacy.min.js"></script>
+  -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .box {
+      margin: 0 auto;
+      width: 100%;
+      height: 100%;
+    }
+
+    .info {
+      top: 60px;
+      left: 30px;
+      position: absolute;
+      color: white;
+    }
+
+    #accelPermsButton {
+      position: absolute;
+      display: none;
+      top: 30px;
+      left: calc((100% - 150px) /2);
+      width: 150px;
+      font-size: 13px;
+    }
+
+    #logText {
+      height: 150px;
+      overflow-y: scroll;
+    }
+
+</style>
+</head>
+<body onload="init()">
+</body>
+<script>
+  function getPermision() {
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission().then(response => {
+        if (response == 'granted') {
+          //getAccel();
+          console.log('YES 1')
+        }
+      });
+    } else {
+      //getAccel();
+      console.log('YES 2')
+    }
+  }
+  function isMobileDevice() {
+    let mobileDevice = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone']
+    return mobileDevice.some(e => navigator.userAgent.match(e))
+  }
+  function init() {
+    getPermision()
+    let type = "WebGL"
+    if (!PIXI.utils.isWebGLSupported()) {
+        type = "canvas"
+    }
+    PIXI.utils.sayHello(type);
+  }
+</script>
+</html>
