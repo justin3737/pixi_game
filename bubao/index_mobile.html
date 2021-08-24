@@ -52,7 +52,7 @@
       alpha:<span id="alpha"></span><br/>
       beta:<span id="beta"></span><br/>
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">4.03</span><br/>
+      版本:<span id="version">4.08</span><br/>
       log:<span id="logText"></span><br/>
     </div>
 </body>
@@ -157,13 +157,22 @@
           }
           PIXI.utils.sayHello(type);
 
-          let b = new Bump(PIXI), //碰撞偵測
-          countdown = 15,         //遊戲時間
-          money,
-          moneys,
-          count_money = 0,        //計算得分
+          let b = new Bump(PIXI),       //碰撞偵測
           screenWidth = window.innerWidth,    //螢幕寬
           screenHeight = window.innerHeight,  //螢幕高
+          countdown = 15,               //遊戲時間
+          maxTime = countdown,
+          moneyContainer,               //錢錢容器
+          moneyShowSec = [1,2,7,12,13], //錢錢出現的秒數
+          moneyPosR = screenWidth - 60, //錢錢出現右邊位置
+          moneyPosL = 10,               //錢錢出現左邊位置
+          moneyPosX = [ moneyPosL, moneyPosR, moneyPosL, moneyPosR, moneyPosL ],
+          moneySpeedY = 12,             //錢錢掉落速度
+          fallContainers,               //掉落物容器
+          fallObjArr = [],              //掉落物品陣列
+          fallObjSpeedY = 4,            //掉落物速度
+          count_money = 0,              //計算得分
+
           app = new PIXI.Application({
             width: screenWidth,
             height: screenHeight,
@@ -180,7 +189,11 @@
                 "../images/bubao_2.png",
                 "../images/bubao_3.png",
                 "../images/bubao_4.png",
-                "../images/point.png"
+                "../images/point.png",
+                "../images/fall_1.png",
+                "../images/fall_2.png",
+                "../images/fall_3.png",
+                "../images/fall_4.png"
             ])
             .on("progress", loadProgressHandler)
             .load(setup);
@@ -207,15 +220,28 @@
 
             //錢錢
             moneyTexture = PIXI.Texture.from("../images/point.png");
+            //掉落物品
+            fall_1Texture = PIXI.Texture.from("../images/fall_1.png");
+            fall_2Texture = PIXI.Texture.from("../images/fall_2.png");
+            fall_3Texture = PIXI.Texture.from("../images/fall_3.png");
+            fall_4Texture = PIXI.Texture.from("../images/fall_4.png");
+            fallObjArr = [fall_1Texture, fall_2Texture, fall_3Texture, fall_4Texture]
+
+            //掉落物容器
+            fallcontainers = new PIXI.Container();
+            app.stage.addChild(fallcontainers);
+            fallcontainers.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2);
+
+            //創建掉落物的time
+            create_fallobj_time=0;
+
             //錢錢容器
-            moneys = new PIXI.Container();
-            app.stage.addChild(moneys);
-            //錢錢容器的x軸
-            moneys.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2);
+            moneyContainer = new PIXI.Container();
+            app.stage.addChild(moneyContainer);
+            moneyContainer.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2);
 
             //創建錢錢的time
             create_money_time=0;
-
             requestAnimationFrame(update);
           }
 
@@ -223,32 +249,62 @@
             if (loop) {
               //執行布寶動畫更新
               bubaoSp.updateSprite();
-
-              //錢錢forEach處理
-              moneys.children.forEach(obj => {
-                obj.position.y += 4;
-                if (obj.position.y >= screenHeight) {
-                  moneys.removeChild(obj);
-                }
-                //碰撞检测
-                if (b.hitTestCircle(obj, bubaoSp, true)) {
-                  moneys.removeChild(obj);
-                  count_money += 1
-                  numberText.text = count_money;
-                }
-              });
-
-              //每隔一段时间，增加一個錢錢
-              create_money_time++;
-              if (create_money_time >= 50) {
-                money = new TreePoint(moneyTexture);
-                moneys.addChild(money);
-                create_money_time = 0;
-              }
-
+              updateFallObject();
+              updateMoney();
               requestAnimationFrame(update);
             } else {
               bubaoSp.stop();
+            }
+          }
+
+          function updateMoney() {
+            //掉落物forEach處理
+            moneyContainer.children.forEach(obj => {
+              obj.position.y += moneySpeedY;
+              if (obj.position.y >= screenHeight) {
+                moneyContainer.removeChild(obj);
+              }
+              //碰撞检测
+              if (b.hitTestCircle(obj, bubaoSp, true)) {
+                moneyContainer.removeChild(obj);
+                count_money += 1
+                numberText.text = count_money;
+              }
+            });
+
+            //每隔幾秒时间，增加一個Tree Point
+            let currSec = maxTime - countdown;
+            if (moneyShowSec.includes(currSec)) {
+              //let _posIdx = moneyShowSec.findIndex(element => element === currSec),
+              _posX = moneyPosX[0],
+              _money = new PureIMG(moneyTexture, true, _posX);
+              moneyContainer.addChild(_money);
+              moneyShowSec.shift();
+              moneyPosX.shift();
+            }
+
+          }
+
+          function updateFallObject() {
+            //掉落物forEach處理
+            fallcontainers.children.forEach(obj => {
+              obj.position.y += fallObjSpeedY;
+              if (obj.position.y >= screenHeight) {
+                fallcontainers.removeChild(obj);
+              }
+              //碰撞检测
+              if (b.hitTestCircle(obj, bubaoSp, true)) {
+                fallcontainers.removeChild(obj);
+              }
+            });
+
+            //每隔一段时间，增加一個掉落物品
+            create_fallobj_time++;
+            if (create_fallobj_time >= 50) {
+              let _no = r(0, fallObjArr.length)
+              _fall = new PureIMG(fallObjArr[_no]);
+              fallcontainers.addChild(_fall);
+              create_fallobj_time = 0;
             }
           }
 
@@ -288,15 +344,18 @@
         }
 
 
-        class TreePoint extends PIXI.Sprite {
-          constructor (textures, loop){
+        class PureIMG extends PIXI.Sprite {
+          constructor (textures, loop, positionX){
             super(textures, loop);
             this.width = 50;
             this.height = 50;
             this.positio_max_x = window.innerWidth < 480? (window.innerWidth - this.width) : ((window.innerWidth - 600)/2);
-            this.position.x = r(0, this.positio_max_x);
+            this.position.x = positionX || r(0, this.positio_max_x);
             this.position.y = 0;
             this.circular = true;
+            if (positionX) {
+              console.log(this.position.x)
+            }
           }
         }
 
