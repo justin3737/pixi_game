@@ -275,9 +275,7 @@
             //每隔幾秒时间，增加一個Tree Point
             let currSec = maxTime - countdown;
             if (moneyShowSec.includes(currSec)) {
-              //let _posIdx = moneyShowSec.findIndex(element => element === currSec),
-              _posX = moneyPosX[0],
-              _money = new PureIMG(moneyTexture, true, _posX);
+              _money = new PureIMG(moneyTexture, true, moneyPosX[0]);
               moneyContainer.addChild(_money);
               moneyShowSec.shift();
               moneyPosX.shift();
