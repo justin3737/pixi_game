@@ -39,9 +39,11 @@
       font-size: 13px;
     }
 
-    #logText {
-      height: 150px;
-      overflow-y: scroll;
+    #infoText {
+      margin-top: 50px;
+      font-size: 20px;
+      font-weight: bolder;
+      display: inline-block;
     }
 
 </style>
@@ -49,25 +51,18 @@
 <body onload="init()">
   <div id="box" class="box"></div>
   <div class="info">
-    alpha:<span id="alpha"></span><br/>
-    beta:<span id="beta"></span><br/>
     gamma:<span id="gamma"></span><br/>
     版本:<span id="version">5.06</span><br/>
     log:<span id="logText"></span><br/>
+    <span id="infoText"></span><br/>
   </div>
 </body>
 <script>
   function getAccel() {
     window.addEventListener('deviceorientation', function(event) {
-      var a = document.getElementById('alpha'),
-          b = document.getElementById('beta'),
-          g = document.getElementById('gamma'),
-          alpha = Math.round(event.alpha),
-          beta = Math.round(event.beta),
+      var g = document.getElementById('gamma'),
           gamma = Math.round(event.gamma);
 
-      a.innerHTML = alpha;
-      b.innerHTML = beta;
       g.innerHTML = gamma;
 
     }, false);
@@ -85,7 +80,7 @@
     }
     PIXI.utils.sayHello(type);
 
-    let logTxt = document.getElementById('logText'),
+    let infoText = document.getElementById('infoText'),
     screenWidth = window.innerWidth,    //螢幕寬
     screenHeight = window.innerHeight,  //螢幕高
     app = new PIXI.Application({
@@ -96,7 +91,8 @@
       resolution: 1       // default: 1
     });
     app.renderer.backgroundColor = 0xde54a9;
-    document.getElementById('box').appendChild(app.view);
+    document.getElementById('box').appendChild(app.view),
+    cdStartArr = ["3","2","1","Start !",""];  //遊戲開始的倒數計時器
 
     PIXI.loader
       .add([
@@ -113,12 +109,27 @@
       .on("progress", loadProgressHandler)
       .load(setup);
       function loadProgressHandler(loader, resource) {
-        //console.log("loading: " + resource.url);
-        logTxt.innerHTML = " progress -->  " + loader.progress + "%";
+        infoText.innerHTML = " Loading:  " + loader.progress + "%";
       }
   }
+  function countdownStart() {
+    if (cdStartArr.length !== 0) {
+      setTimeout(() => {
+        infoText.innerHTML = cdStartArr[0];
+        cdStartArr.shift();
+        countdownStart();
+      }, 1000);
+    } else {
+      startGame();
+    }
+  }
   function setup() {
-    console.log('steup')
+    //prepare...
+    //countdown
+    countdownStart();
+  }
+  function startGame(){
+    console.log('start game')
   }
 </script>
 </html>
