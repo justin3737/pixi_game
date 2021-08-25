@@ -52,7 +52,7 @@
   <div id="box" class="box"></div>
   <div class="info">
     gamma:<span id="gamma"></span><br/>
-    版本:<span id="version">5.11</span><br/>
+    版本:<span id="version">5.12</span><br/>
     log:<span id="logText"></span><br/>
     <span id="infoText"></span><br/>
   </div>
@@ -70,6 +70,8 @@
       var g = document.getElementById('gamma'),
           gamma = Math.round(event.gamma);
 
+      g.innerHTML = gamma;
+
       if (loop) {
         if (gamma - old_gamma > 0) {
           bubaoSp.vx = bubaoMobileSpeed;
@@ -82,7 +84,7 @@
         }
       }
 
-      g.innerHTML = gamma;
+      old_gamma = gamma;
 
     }, false);
   }
