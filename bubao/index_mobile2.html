@@ -44,10 +44,10 @@
     }
   </style>
 </head>
-<body>
+<body onload="init();">
 <h1>小樹點</br>奧運挑戰</h1>
 <img class="bubao_cover" src="../images/bubao_index.png"/>
-<a class="game_start" href="game.html">開始遊戲</a>
+<a class="game_start" onclick="getPermision();">開始遊戲</a>
 <div class="game_desc">
   <h4>遊戲說明：</h4>
     <Li>開啟手機陀羅儀功能</Li>
@@ -56,4 +56,22 @@
     <Li>時間限制15秒</Li>
 </div>
 </body>
+<script>
+function getPermision() {
+  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+    //ios
+    DeviceOrientationEvent.requestPermission().then(response => {
+      if (response == 'granted') {
+        goto();
+      }
+    });
+  } else {
+    alert('is android or web')
+    goto();
+  }
+}
+function goto() {
+  window.location.href = 'game.html';
+}
+</script>
 </html>
