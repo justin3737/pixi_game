@@ -26,6 +26,7 @@
       width: 480px;
       height: 100%;
       position: relative;
+      background-color: #de54a9;
     }
 
     @media(max-width:480px){
@@ -56,7 +57,7 @@
   <div id="box" class="box">
     <div class="info">
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">5.14</span><br/>
+      版本:<span id="version">5.15</span><br/>
       log:<span id="logText"></span><br/>
       <span id="infoText"></span><br/>
     </div>
@@ -168,8 +169,8 @@
       fallObjSpeedY = 4,            //掉落物速度
       count_money = 0;              //計算得分
 
-      app.renderer.backgroundColor = 0xde54a9;
-      document.getElementById('box').appendChild(app.view);
+    app.renderer.backgroundColor = 0xde54a9;
+    document.getElementById('box').appendChild(app.view);
 
     PIXI.loader
       .add([
