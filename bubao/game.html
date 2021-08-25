@@ -47,11 +47,33 @@
 </style>
 </head>
 <body onload="init()">
-  <span>version: 5.01</span>
+  <div class="info">
+    alpha:<span id="alpha"></span><br/>
+    beta:<span id="beta"></span><br/>
+    gamma:<span id="gamma"></span><br/>
+    版本:<span id="version">5.02</span><br/>
+    log:<span id="logText"></span><br/>
+  </div>
 </body>
 <script>
+  function getAccel() {
+    window.addEventListener('deviceorientation', function(event) {
+      var a = document.getElementById('alpha'),
+          b = document.getElementById('beta'),
+          g = document.getElementById('gamma'),
+          alpha = Math.round(event.alpha),
+          beta = Math.round(event.beta),
+          gamma = Math.round(event.gamma);
+
+      a.innerHTML = alpha;
+      b.innerHTML = beta;
+      g.innerHTML = gamma;
+
+    }, false);
+  }
   function getPermision() {
     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      //ios
       DeviceOrientationEvent.requestPermission().then(response => {
         if (response == 'granted') {
           //getAccel();
@@ -59,6 +81,7 @@
         }
       });
     } else {
+      //android, web
       //getAccel();
       alert('YES 2')
     }
