@@ -52,7 +52,7 @@
   <div id="box" class="box"></div>
   <div class="info">
     gamma:<span id="gamma"></span><br/>
-    版本:<span id="version">5.08</span><br/>
+    版本:<span id="version">5.09</span><br/>
     log:<span id="logText"></span><br/>
     <span id="infoText"></span><br/>
   </div>
@@ -96,9 +96,9 @@
     key.release = undefined;
     key.downHandler = event => {
       if (event.keyCode === key.code) {
-          if (key.isUp && key.press) key.press();
-          key.isDown = true;
-          key.isUp = false;
+        if (key.isUp && key.press) key.press();
+        key.isDown = true;
+        key.isUp = false;
       }
       event.preventDefault();
     };
@@ -166,15 +166,15 @@
 
     PIXI.loader
       .add([
-          "../images/bubao_1.png",
-          "../images/bubao_2.png",
-          "../images/bubao_3.png",
-          "../images/bubao_4.png",
-          "../images/point.png",
-          "../images/fall_1.png",
-          "../images/fall_2.png",
-          "../images/fall_3.png",
-          "../images/fall_4.png"
+        "../images/bubao_1.png",
+        "../images/bubao_2.png",
+        "../images/bubao_3.png",
+        "../images/bubao_4.png",
+        "../images/point.png",
+        "../images/fall_1.png",
+        "../images/fall_2.png",
+        "../images/fall_3.png",
+        "../images/fall_4.png"
       ])
       .on("progress", loadProgressHandler)
       .load(setup);
@@ -335,6 +335,7 @@
 
     function startGame(){
       loop = true;
+      cdTimer.start();
       requestAnimationFrame(update);
     }
 
