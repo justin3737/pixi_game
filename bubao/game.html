@@ -52,7 +52,7 @@
   <div id="box" class="box"></div>
   <div class="info">
     gamma:<span id="gamma"></span><br/>
-    版本:<span id="version">5.09</span><br/>
+    版本:<span id="version">5.11</span><br/>
     log:<span id="logText"></span><br/>
     <span id="infoText"></span><br/>
   </div>
@@ -61,7 +61,7 @@
   let bubaoSp,              //布寶實體物件
     bubaoMobileSpeed = 8,   //布寶手機陀螺儀控制移動速度
     old_gamma = 0,
-    loop = false,            //決定遊戲是否繼續進行或終止
+    loop = true,            //決定遊戲是否繼續進行或終止
     logText = document.getElementById('logText'),
     cdTimer;
 
@@ -334,7 +334,6 @@
     }
 
     function startGame(){
-      loop = true;
       cdTimer.start();
       requestAnimationFrame(update);
     }
