@@ -52,21 +52,77 @@
   <div id="box" class="box"></div>
   <div class="info">
     gamma:<span id="gamma"></span><br/>
-    版本:<span id="version">5.06</span><br/>
+    版本:<span id="version">5.08</span><br/>
     log:<span id="logText"></span><br/>
     <span id="infoText"></span><br/>
   </div>
 </body>
-<script>
+<script type="text/javascript">
+  let bubaoSp,              //布寶實體物件
+    bubaoMobileSpeed = 8,   //布寶手機陀螺儀控制移動速度
+    old_gamma = 0,
+    loop = false,            //決定遊戲是否繼續進行或終止
+    logText = document.getElementById('logText'),
+    cdTimer;
+
   function getAccel() {
     window.addEventListener('deviceorientation', function(event) {
       var g = document.getElementById('gamma'),
           gamma = Math.round(event.gamma);
 
+      if (loop) {
+        if (gamma - old_gamma > 0) {
+          bubaoSp.vx = bubaoMobileSpeed;
+          bubaoSp.setDirection('right')
+        } else if (gamma - old_gamma < 0) {
+          bubaoSp.vx = bubaoMobileSpeed * -1;
+          bubaoSp.setDirection('left')
+        } else {
+          bubaoSp.running(0);
+        }
+      }
+
       g.innerHTML = gamma;
 
     }, false);
   }
+
+  function keyboard(keyCode) {
+    let key = {};
+    key.code = keyCode;
+    key.isDown = false;
+    key.isUp = true;
+    key.press = undefined;
+    key.release = undefined;
+    key.downHandler = event => {
+      if (event.keyCode === key.code) {
+          if (key.isUp && key.press) key.press();
+          key.isDown = true;
+          key.isUp = false;
+      }
+      event.preventDefault();
+    };
+    key.upHandler = event => {
+      if (event.keyCode === key.code) {
+        if (key.isDown && key.release) key.release();
+        key.isDown = false;
+        key.isUp = true;
+      }
+      event.preventDefault();
+    };
+    window.addEventListener(
+      "keydown", key.downHandler.bind(key), false
+    );
+    window.addEventListener(
+      "keyup", key.upHandler.bind(key), false
+    );
+    return key;
+  }
+
+  function r(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min
+  }
+
   function isMobileDevice() {
     let mobileDevice = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone']
     return mobileDevice.some(e => navigator.userAgent.match(e))
@@ -80,19 +136,33 @@
     }
     PIXI.utils.sayHello(type);
 
-    let infoText = document.getElementById('infoText'),
-    screenWidth = window.innerWidth,    //螢幕寬
-    screenHeight = window.innerHeight,  //螢幕高
-    app = new PIXI.Application({
-      width: screenWidth,
-      height: screenHeight,
-      antialias: true,    // default: false
-      transparent: false, // default: false
-      resolution: 1       // default: 1
-    });
-    app.renderer.backgroundColor = 0xde54a9;
-    document.getElementById('box').appendChild(app.view),
-    cdStartArr = ["3","2","1","Start !",""];  //遊戲開始的倒數計時器
+    let b = new Bump(PIXI),       //碰撞偵測
+      infoText = document.getElementById('infoText'),
+      screenWidth = window.innerWidth,    //螢幕寬
+      screenHeight = window.innerHeight,  //螢幕高
+      app = new PIXI.Application({
+        width: screenWidth,
+        height: screenHeight,
+        antialias: true,    // default: false
+        transparent: false, // default: false
+        resolution: 1       // default: 1
+      }),
+      cdStartArr = ["3","2","1","Start !",""],  //遊戲開始的倒數計時器
+      countdown = 15,               //遊戲時間
+      maxTime = countdown,
+      moneyContainer,               //錢錢容器
+      moneyShowSec = [1,2,7,12,13], //錢錢出現的秒數
+      moneyPosR = screenWidth - 60, //錢錢出現右邊位置
+      moneyPosL = 10,               //錢錢出現左邊位置
+      moneyPosX = [ moneyPosL, moneyPosR, moneyPosL, moneyPosR, moneyPosL ],
+      moneySpeedY = 12,             //錢錢掉落速度
+      fallContainers,               //掉落物容器
+      fallObjArr = [],              //掉落物品陣列
+      fallObjSpeedY = 4,            //掉落物速度
+      count_money = 0;              //計算得分
+
+      app.renderer.backgroundColor = 0xde54a9;
+      document.getElementById('box').appendChild(app.view);
 
     PIXI.loader
       .add([
@@ -108,28 +178,324 @@
       ])
       .on("progress", loadProgressHandler)
       .load(setup);
-      function loadProgressHandler(loader, resource) {
-        infoText.innerHTML = " Loading:  " + loader.progress + "%";
+    function loadProgressHandler(loader, resource) {
+      infoText.innerHTML = " Loading:  " + loader.progress + "%";
+    }
+
+    function setup() {
+      //prepare...
+      //建立布寶動畫
+      CreateAnimatedSp();
+
+      //加入倒數數字
+      CreateCountDowntimer();
+
+      //顯示賺了多少錢
+      const style = new PIXI.TextStyle({
+        fontSize: 20,
+        fill: "white"
+      });
+      numberText = new PIXI.Text('0',style);
+      numberText.position.x = 30;
+      numberText.position.y = 30;
+      app.stage.addChild(numberText);
+
+      //錢錢
+      moneyTexture = PIXI.Texture.from("../images/point.png");
+      //掉落物品
+      fall_1Texture = PIXI.Texture.from("../images/fall_1.png");
+      fall_2Texture = PIXI.Texture.from("../images/fall_2.png");
+      fall_3Texture = PIXI.Texture.from("../images/fall_3.png");
+      fall_4Texture = PIXI.Texture.from("../images/fall_4.png");
+      fallObjArr = [fall_1Texture, fall_2Texture, fall_3Texture, fall_4Texture]
+
+      //掉落物容器
+      fallcontainers = new PIXI.Container();
+      app.stage.addChild(fallcontainers);
+      fallcontainers.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2);
+
+      //創建掉落物的time
+      create_fallobj_time = 0;
+
+      //錢錢容器
+      moneyContainer = new PIXI.Container();
+      app.stage.addChild(moneyContainer);
+      moneyContainer.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2);
+
+      //countdown
+      countdownStart();
+    }
+
+    function update() {
+      if (loop) {
+        //執行布寶動畫更新
+        bubaoSp.updateSprite();
+        updateFallObject();
+        updateMoney();
+        requestAnimationFrame(update);
+      } else {
+        bubaoSp.stop();
       }
+    }
+
+    function updateMoney() {
+      //掉落物forEach處理
+      moneyContainer.children.forEach(obj => {
+        obj.position.y += moneySpeedY;
+        if (obj.position.y >= screenHeight) {
+          moneyContainer.removeChild(obj);
+        }
+        //碰撞检测
+        if (b.hitTestCircle(obj, bubaoSp, true)) {
+          moneyContainer.removeChild(obj);
+          count_money += 1
+          numberText.text = count_money;
+        }
+      });
+
+      //每隔幾秒时间，增加一個Tree Point
+      let currSec = maxTime - countdown;
+      if (moneyShowSec.includes(currSec)) {
+        _money = new PureIMG(moneyTexture, true, moneyPosX[0]);
+        moneyContainer.addChild(_money);
+        moneyShowSec.shift();
+        moneyPosX.shift();
+      }
+
+    }
+
+    function updateFallObject() {
+      //掉落物forEach處理
+      fallcontainers.children.forEach(obj => {
+        obj.position.y += fallObjSpeedY;
+        if (obj.position.y >= screenHeight) {
+          fallcontainers.removeChild(obj);
+        }
+        //碰撞检测
+        if (b.hitTestCircle(obj, bubaoSp, true)) {
+          fallcontainers.removeChild(obj);
+        }
+      });
+
+      //每隔一段时间，增加一個掉落物品
+      create_fallobj_time++;
+      if (create_fallobj_time >= 50) {
+        let _no = r(0, fallObjArr.length)
+        _fall = new PureIMG(fallObjArr[_no]);
+        fallcontainers.addChild(_fall);
+        create_fallobj_time = 0;
+      }
+    }
+
+    function CreateAnimatedSp() {
+      let bubaoImages = ["../images/bubao_1.png","../images/bubao_2.png","../images/bubao_3.png","../images/bubao_4.png"];
+      let textureArray = [];
+
+      for (let i=0; i < bubaoImages.length; i++)
+      {
+        let texture = PIXI.Texture.from(bubaoImages[i]);
+        textureArray.push(texture);
+      };
+
+      bubaoSp = new BuBao(textureArray);
+      app.stage.addChild(bubaoSp);
+    }
+
+    function CreateCountDowntimer() {
+      const cdTxt = new PIXI.Text(countdown, {fontFamily : 'Arial', fontSize: 20, fill : 0xffffff, align : 'center' });
+      cdTxt.position.x = window.innerWidth - 30 - cdTxt.width;
+      cdTxt.position.y = 30;
+      app.stage.addChild(cdTxt);
+
+      cdTimer = new EE3Timer.Timer(1000);
+      cdTimer.repeat = countdown;
+      cdTimer.on('end', elapsed => {
+        loop = false;
+      });
+      cdTimer.on('repeat', (elapsed, repeat) => {
+        countdown --;
+        cdTxt.text = countdown;
+      });
+      app.ticker.add(() => {
+        cdTimer.timerManager.update(app.ticker.elapsedMS);
+      }, this);
+    }
+
+    function countdownStart() {
+      if (cdStartArr.length !== 0) {
+        setTimeout(() => {
+          infoText.innerHTML = cdStartArr[0];
+          cdStartArr.shift();
+          countdownStart();
+        }, 1000);
+      } else {
+        startGame();
+      }
+    }
+
+    function startGame(){
+      loop = true;
+      requestAnimationFrame(update);
+    }
+
   }
-  function countdownStart() {
-    if (cdStartArr.length !== 0) {
-      setTimeout(() => {
-        infoText.innerHTML = cdStartArr[0];
-        cdStartArr.shift();
-        countdownStart();
-      }, 1000);
-    } else {
-      startGame();
+
+  class PureIMG extends PIXI.Sprite {
+    constructor (textures, loop, positionX){
+      super(textures, loop);
+      this.width = 50;
+      this.height = 50;
+      this.positio_max_x = window.innerWidth < 480? (window.innerWidth - this.width) : ((window.innerWidth - 600)/2);
+      this.position.x = positionX || r(0, this.positio_max_x);
+      this.position.y = 0;
+      this.circular = true;
     }
   }
-  function setup() {
-    //prepare...
-    //countdown
-    countdownStart();
-  }
-  function startGame(){
-    console.log('start game')
+
+  class BuBao extends PIXI.AnimatedSprite {
+    constructor (textures, loop){
+      super(textures, loop);
+      this.width = 120;
+      this.height = 120;
+      this.vx = 0;
+      this.vy = 0;
+      this.interactive = true;
+      this.buttonMode = true;
+      this.dragging = false;
+      this.anchor.x = 0.5;
+      this.circular = true;
+      this.resource_scale = 0.5;
+      this.moveSpeed = 8;
+      this.last_position_x = 0;
+      this.screenWidth = window.innerWidth;
+      this.screenHeight = window.innerHeight;
+      this.animationSpeed = 0.2;
+      this.direction = 'right';
+      this.dir_count = 0;         //轉向計算用
+      this.dir_count_limit = 2;
+      this.position_last_x = 0;
+      this.position_count = 0;    //停止播放用
+      this.position_count_limit = 10;
+      this.init();
+    }
+
+    init() {
+      //出場位置
+      this.position.x = (this.screenWidth - 120) / 2;
+      this.position.y = this.screenHeight - 120 - 20;
+
+      //鍵盤事件
+      let left = keyboard(37),
+        up = keyboard(38),
+        right = keyboard(39),
+        down = keyboard(40);
+      left.press = () => {
+        this.running(this.moveSpeed * -1);
+        this.scale.x = this.resource_scale * -1;
+      };
+      left.release = () => {
+        this.running(0);
+      };
+      right.press = () => {
+        this.running(this.moveSpeed);
+        this.scale.x = this.resource_scale;
+      };
+      right.release = () => {
+        this.running(0);
+      };
+
+      //觸碰事件
+      this.on('pointerdown', this.onDragStart)
+      this.on('pointermove', this.onDragMove)
+      this.on('pointerup', this.onDragEnd)
+      this.on('pointerupoutside', this.onDragEnd);
+    }
+
+    doStopOrPlay(pos) {
+      if (this.position_last_x === pos) {
+        this.position_count += 1;
+          //觸發Stop()不至於太過靈敏
+        if (this.position_count_limit === this.position_count) {
+          this.stop();
+        }
+      } else {
+        this.position_count = 0;
+        if (!this.playing)
+          this.play();
+      }
+      this.position_last_x = pos;
+    }
+
+    updateSprite() {
+      this.doStopOrPlay(this.position.x);
+      this.position.x += this.vx;
+      this.position.y += this.vy;
+
+      //避免超出畫布
+      if (this.position.x - this.width/2 <= 0) {
+        this.position.x = this.width/2;
+      }
+      if (this.position.x + this.width/2 >= this.screenWidth) {
+        this.position.x = this.screenWidth - this.width/2;
+      }
+      if (this.position.y <=0 ) {
+        this.position.y = 0;
+      }
+      if (this.position.y >= this.screenHeight - this.height) {
+        this.position.y = this.screenHeight - this.height;
+      }
+    }
+
+    setDirection(dir) {
+      if (this.direction !== dir) {
+        //使轉向不至於太過靈敏
+        if (this.dir_count === this.dir_count_limit) {
+          this.direction = dir;
+          return;
+        }
+        this.dir_count += 1;
+        return;
+      } else {
+        this.dir_count = 0;
+      }
+      if (this.direction === 'left') {
+        this.scale.x = this.resource_scale * -1;
+      } else {
+        this.scale.x = this.resource_scale;
+      }
+    }
+
+    running(deltaX) {
+      if (!deltaX) {
+        this.vx = 0;
+      } else {
+        this.vx += deltaX;
+      }
+    }
+
+    onDragStart(e) {
+      this.x = e.data.global.x - this.width/2;
+      this.dragging = true;
+      this.play();
+    }
+
+    onDragMove(e) {
+      if (this.dragging) {
+        this.x = e.data.global.x - this.width/2;
+        if (this.last_position_x -  e.data.global.x > 0) {
+          this.scale.x = this.resource_scale * -1;
+        } else {
+          this.scale.x = this.resource_scale * 1;
+        }
+        this.last_position_x = e.data.global.x;
+      }
+    }
+
+    onDragEnd(e) {
+      this.x = e.data.global.x - this.width/2;
+      this.dragging = false;
+      this.stop();
+    }
   }
 </script>
 </html>
