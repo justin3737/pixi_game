@@ -17,10 +17,23 @@
       padding: 0;
     }
 
+    body {
+      background-color: #fc6ac4;
+    }
+
     .box {
       margin: 0 auto;
-      width: 100%;
+      width: 480px;
       height: 100%;
+      position: relative;
+    }
+
+    @media(max-width:480px){
+      .box {
+        margin: 0 auto;
+        width: 100%;
+        height: 100%;
+      }
     }
 
     .info {
@@ -28,15 +41,6 @@
       left: 30px;
       position: absolute;
       color: white;
-    }
-
-    #accelPermsButton {
-      position: absolute;
-      display: none;
-      top: 30px;
-      left: calc((100% - 150px) /2);
-      width: 150px;
-      font-size: 13px;
     }
 
     #infoText {
@@ -49,26 +53,29 @@
 </style>
 </head>
 <body onload="init()">
-  <div id="box" class="box"></div>
-  <div class="info">
-    gamma:<span id="gamma"></span><br/>
-    版本:<span id="version">5.12</span><br/>
-    log:<span id="logText"></span><br/>
-    <span id="infoText"></span><br/>
-  </div>
+  <div id="box" class="box">
+    <div class="info">
+      gamma:<span id="gamma"></span><br/>
+      版本:<span id="version">5.13</span><br/>
+      log:<span id="logText"></span><br/>
+      <span id="infoText"></span><br/>
+    </div>
+</div>
 </body>
 <script type="text/javascript">
   let bubaoSp,              //布寶實體物件
     bubaoMobileSpeed = 8,   //布寶手機陀螺儀控制移動速度
     old_gamma = 0,
     loop = true,            //決定遊戲是否繼續進行或終止
-    logText = document.getElementById('logText'),
-    cdTimer;
+    screenWidth = window.innerWidth < 480 ? window.innerWidth: 480,     //螢幕寬
+    screenHeight = window.innerHeight,                                  //螢幕高
+    cdTimer,
+    logText = document.getElementById('logText');
 
   function getAccel() {
     window.addEventListener('deviceorientation', function(event) {
-      var g = document.getElementById('gamma'),
-          gamma = Math.round(event.gamma);
+      let g = document.getElementById('gamma'),
+      gamma = Math.round(event.gamma);
 
       g.innerHTML = gamma;
 
@@ -140,8 +147,6 @@
 
     let b = new Bump(PIXI),       //碰撞偵測
       infoText = document.getElementById('infoText'),
-      screenWidth = window.innerWidth,    //螢幕寬
-      screenHeight = window.innerHeight,  //螢幕高
       app = new PIXI.Application({
         width: screenWidth,
         height: screenHeight,
@@ -214,7 +219,6 @@
       //掉落物容器
       fallcontainers = new PIXI.Container();
       app.stage.addChild(fallcontainers);
-      fallcontainers.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2);
 
       //創建掉落物的time
       create_fallobj_time = 0;
@@ -222,7 +226,6 @@
       //錢錢容器
       moneyContainer = new PIXI.Container();
       app.stage.addChild(moneyContainer);
-      moneyContainer.x = screenWidth < 480 ? 0 : ((screenWidth - 600)/2);
 
       //countdown
       countdownStart();
@@ -263,7 +266,6 @@
         moneyShowSec.shift();
         moneyPosX.shift();
       }
-
     }
 
     function updateFallObject() {
@@ -305,7 +307,7 @@
 
     function CreateCountDowntimer() {
       const cdTxt = new PIXI.Text(countdown, {fontFamily : 'Arial', fontSize: 20, fill : 0xffffff, align : 'center' });
-      cdTxt.position.x = window.innerWidth - 30 - cdTxt.width;
+      cdTxt.position.x = screenWidth - 30 - cdTxt.width;
       cdTxt.position.y = 30;
       app.stage.addChild(cdTxt);
 
@@ -339,7 +341,6 @@
       cdTimer.start();
       requestAnimationFrame(update);
     }
-
   }
 
   class PureIMG extends PIXI.Sprite {
@@ -347,8 +348,7 @@
       super(textures, loop);
       this.width = 50;
       this.height = 50;
-      this.positio_max_x = window.innerWidth < 480? (window.innerWidth - this.width) : ((window.innerWidth - 600)/2);
-      this.position.x = positionX || r(0, this.positio_max_x);
+      this.position.x = positionX || r(0, screenWidth);
       this.position.y = 0;
       this.circular = true;
     }
@@ -369,8 +369,8 @@
       this.resource_scale = 0.5;
       this.moveSpeed = 8;
       this.last_position_x = 0;
-      this.screenWidth = window.innerWidth;
-      this.screenHeight = window.innerHeight;
+      this.screenWidth = screenWidth;
+      this.screenHeight = screenHeight;
       this.animationSpeed = 0.2;
       this.direction = 'right';
       this.dir_count = 0;         //轉向計算用
