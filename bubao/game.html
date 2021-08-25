@@ -56,7 +56,7 @@
   <div id="box" class="box">
     <div class="info">
       gamma:<span id="gamma"></span><br/>
-      版本:<span id="version">5.13</span><br/>
+      版本:<span id="version">5.14</span><br/>
       log:<span id="logText"></span><br/>
       <span id="infoText"></span><br/>
     </div>
@@ -348,7 +348,8 @@
       super(textures, loop);
       this.width = 50;
       this.height = 50;
-      this.position.x = positionX || r(0, screenWidth);
+      this.positio_max_x = screenWidth - this.width;
+      this.position.x = positionX || r(0, this.positio_max_x);
       this.position.y = 0;
       this.circular = true;
     }
