@@ -47,6 +47,7 @@
 </style>
 </head>
 <body onload="init()">
+  <span>version: 5.01</span>
 </body>
 <script>
   function getPermision() {
@@ -54,12 +55,12 @@
       DeviceOrientationEvent.requestPermission().then(response => {
         if (response == 'granted') {
           //getAccel();
-          console.log('YES 1')
+          alert('YES 1')
         }
       });
     } else {
       //getAccel();
-      console.log('YES 2')
+      alert('YES 2')
     }
   }
   function isMobileDevice() {
