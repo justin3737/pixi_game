@@ -75,14 +75,12 @@
       //ios
       DeviceOrientationEvent.requestPermission().then(response => {
         if (response == 'granted') {
-          //getAccel();
-          alert('YES 1')
+          getAccel();
         }
       });
     } else {
       //android, web
-      //getAccel();
-      alert('YES 2')
+      getAccel();
     }
   }
   function isMobileDevice() {
