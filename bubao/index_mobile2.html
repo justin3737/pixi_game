@@ -59,14 +59,13 @@
 <script>
 function getPermision() {
   if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-    //ios
     DeviceOrientationEvent.requestPermission().then(response => {
       if (response == 'granted') {
         goto();
       }
     });
   } else {
-    alert('is android or web')
+    //android or web
     goto();
   }
 }
