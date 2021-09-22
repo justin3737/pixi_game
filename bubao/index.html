@@ -13,75 +13,112 @@
 
     html, body {
       height: 100%;
-      background-color: #eee;
+      background-color: #FFE1A0;
+      font-family: "Noto Sans", Helvetica,Arial,sans-serif;
     }
 
-    .box {
+    .container {
+      position: relative;
       margin: 0 auto;
       width: 480px;
       height: 100%;
       position: relative;
-      background-color: #fff;
+      background-image: url('../images/index_dot_bg.png');
+      background-repeat: no-repeat;
+      background-size: cover;
     }
 
     @media(max-width:480px){
-      .box {
+      .container {
         margin: 0 auto;
         width: 100%;
         height: 100%;
       }
     }
 
-    h1 {
-      text-align: center;
-      font-size: 36px;
-      font-family: "Noto Sans", Helvetica,Arial,sans-serif;
-      padding-top: 20px;
+    .main {
+      position: relative;
+      height: 60%;
     }
 
-    .bubao_cover {
-      margin: 10px auto 10px;
-      display: block;
+    #evt_banner {
+      position: absolute;
+      width: 100%;
+      z-index: 1;
+      top: 5%;
+    }
+
+    #role {
+      position: absolute;
+      width: 100%;
+      top: 52%;
+      z-index: 2;
     }
 
     .game_start {
-      width: 80%;
-      height: 40px;
+      background-image: url('../images/index_start_btn.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      display: inline-block;
+      width: 40%;
+      height: 8%;
+      margin-top: 15px;
+      padding-bottom: 8%;
+    }
+
+    .desc {
       position: relative;
-      background-color: yellowgreen;
-      color: white;
-      font-family: "Noto Sans", Helvetica,Arial,sans-serif;
-      font-size: 16px;
-      display: block;
-      text-decoration: none;
-      margin: 10px auto;
+      height: 40%;
+      border-top-left-radius: 55% 30%;
+      border-top-right-radius: 55% 30%;
+      background-color: white;
+      color: #5d4d2d;
       text-align: center;
-      line-height: 40px;
-      border-radius: 6px;
+    }
+
+    .icon_point {
+      width: 20px;
+      vertical-align: middle;
     }
 
     .game_desc {
       margin: 10px auto;
-      width: 68%;
+      width: 70%;
+      font-size: 14px;
+      text-align: left;
     }
 
-    .game_desc h4 {
-      margin-bottom: 0;
+    .game_desc li {
+      line-height: 24px;
+    }
+
+    .game_desc h2 {
+      font-size: 30px;
+      text-align: center;
+      padding-top: 30px;
+      margin-bottom: 15px;
     }
   </style>
 </head>
 <body>
-<div class="box">
-  <h1>小樹點</br>奧運挑戰</h1>
-  <img class="bubao_cover" src="../images/bubao_index.png"/>
-  <a class="game_start" onclick="getPermision();">開始遊戲</a>
-  <div class="game_desc">
-  <h4>遊戲說明：</h4>
-    <Li>開啟手機陀羅儀功能</Li>
-    <Li>左右搖動手機控制方向</Li>
-    <Li>接到小樹點即為獲得總點數</Li>
-    <Li>時間限制15秒</Li>
-</div>
+<div class="container">
+  <div class="main">
+    <img id="role" src="../images/index_role.png" alt="">
+    <img id="evt_banner" src="../images/index_evt_banner.png" alt="">
+  </div>
+  <div class="desc">
+    <div class="game_desc">
+      <h2>遊戲說明</h2>
+      <ul>
+        <Li>允許您存去手機的陀羅儀權限</Li>
+        <Li>利用左右搖動，控制角色移動方向</Li>
+        <Li>時間內接下小樹點圖示<img class="icon_point" src="../images/point.png" />，即可賺取點數</Li>
+        <Li>遊戲時間為15秒</Li>
+      </ul>
+    </div>
+    <a class="game_start" onclick="getPermision();"></a>
+  </div>
+
 </div>
 </body>
 <script>
