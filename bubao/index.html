@@ -61,9 +61,8 @@
       background-size: cover;
       display: inline-block;
       width: 40%;
-      height: 8%;
       margin-top: 15px;
-      padding-bottom: 8%;
+      padding-bottom: 15%;
     }
 
     .desc {
@@ -83,15 +82,15 @@
 
     .icon_point::after {
       content: '';
-      position: relative;
+      position: absolute;
       width: 24px;
       height: 24px;
       background-repeat: no-repeat;
-      background-image: url('../images/point.png');
+      background-image: url('../images/icon_price.png');
       background-size: 20px;
       display: inline-block;
-      top: 8px;
-      left: 3px;
+      top: 2px;
+      left: 144px;
     }
 
     .game_desc {
@@ -111,6 +110,76 @@
       text-align: center;
       padding-top: 30px;
       margin-bottom: 15px;
+    }
+
+    @media(max-height:736px){
+      #evt_banner {
+        top: -2%;
+      }
+
+      #role {
+        top: 48%;
+      }
+
+      .game_desc h2 {
+        padding-top: 15px;
+      }
+
+      .game_start {
+        margin-top: 10px;
+      }
+    }
+
+    @media(max-height:667px){
+      #evt_banner {
+        top: -4%;
+      }
+
+      #role {
+        top: 45%;
+      }
+
+      .game_desc h2 {
+        padding-top: 10px;
+        margin-bottom: 10px;
+      }
+
+      .game_start {
+        margin-top: 0px;
+      }
+    }
+
+    @media(max-height:568px){
+      .main {
+        height: 57%;
+      }
+
+      .desc {
+        height: 43%;
+      }
+
+      #evt_banner {
+        top: -7%;
+      }
+
+      #role {
+        top: 45%;
+        width: 90%;
+        left: 5%;
+      }
+
+      .game_desc h2 {
+        font-size: 20px;
+      }
+
+      .game_desc {
+        width: 77%;
+        font-size: 13px;
+      }
+
+      .icon_point::after {
+        left: 133px;
+      }
     }
   </style>
 </head>
