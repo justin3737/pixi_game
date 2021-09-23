@@ -17,20 +17,24 @@
       padding: 0;
     }
 
-    body {
-      background-color: #fc6ac4;
+    html, body {
+      height: 100%;
+      background-color: #FFE1A0;
+      font-family: "Noto Sans", Helvetica,Arial,sans-serif;
     }
 
-    .box {
+    .container {
       margin: 0 auto;
       width: 480px;
       height: 100%;
       position: relative;
-      background-color: #de54a9;
+      background-image: url('../images/index_dot_bg.png');
+      background-repeat: no-repeat;
+      background-size: cover;
     }
 
     @media(max-width:480px){
-      .box {
+      .container {
         margin: 0 auto;
         width: 100%;
         height: 100%;
@@ -54,7 +58,7 @@
 </style>
 </head>
 <body onload="init()">
-  <div id="box" class="box">
+  <div id="container" class="container">
     <div class="info">
       gamma:<span id="gamma"></span><br/>
       版本:<span id="version">6.01</span><br/>
@@ -152,7 +156,7 @@
         width: screenWidth,
         height: screenHeight,
         antialias: true,    // default: false
-        transparent: false, // default: false
+        transparent: true, // default: false
         resolution: 1       // default: 1
       }),
       cdStartArr = ["3","2","1","Start !",""],  //遊戲開始的倒數計時器
@@ -170,7 +174,7 @@
       count_money = 0;              //計算得分
 
     app.renderer.backgroundColor = 0xde54a9;
-    document.getElementById('box').appendChild(app.view);
+    document.getElementById('container').appendChild(app.view);
 
     PIXI.loader
       .add([
