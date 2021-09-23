@@ -77,8 +77,21 @@
     }
 
     .icon_point {
-      width: 20px;
-      vertical-align: middle;
+      width: 24px;
+      display: inline-block;
+    }
+
+    .icon_point::after {
+      content: '';
+      position: relative;
+      width: 24px;
+      height: 24px;
+      background-repeat: no-repeat;
+      background-image: url('../images/point.png');
+      background-size: 20px;
+      display: inline-block;
+      top: 8px;
+      left: 3px;
     }
 
     .game_desc {
@@ -90,6 +103,7 @@
 
     .game_desc li {
       line-height: 24px;
+      position: relative;
     }
 
     .game_desc h2 {
@@ -112,7 +126,7 @@
       <ul>
         <Li>允許您存去手機的陀羅儀權限</Li>
         <Li>利用左右搖動，控制角色移動方向</Li>
-        <Li>時間內接下小樹點圖示<img class="icon_point" src="../images/point.png" />，即可賺取點數</Li>
+        <Li>時間內接下小樹點圖示<i class="icon_point"></i>，即可賺取點數</Li>
         <Li>遊戲時間為15秒</Li>
       </ul>
     </div>
