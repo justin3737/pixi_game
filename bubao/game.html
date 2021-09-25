@@ -144,7 +144,7 @@
         "../images/fall_4.png"
       ])
       .on("progress", loadProgressHandler)
-      .load(countdownStart);
+      .load(setup);
 
     function loadProgressHandler(loader, resource) {
       document.getElementById('progress_percent').style.width = loader.progress + "%";
@@ -155,10 +155,6 @@
           _container.classList.add("with_countdown");
         }, 500);
       }
-    }
-
-    function setupfinished() {
-
     }
 
     function setup() {
@@ -307,7 +303,7 @@
       } else {
         //顯示舞台遊戲畫面
         document.getElementById('container').appendChild(app.view);
-        //startGame();
+        startGame();
       }
     }
 
