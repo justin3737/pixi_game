@@ -89,7 +89,7 @@
 </head>
 <body onload="init()">
   <div id="container" class="container with_progress">
-    <div class="progress_container is-done">
+    <div id="progress_bar" class="progress_container">
       <div id="progress_percent" class="progress"></div>
     </div>
     <div class="info">
@@ -204,9 +204,6 @@
       fallObjSpeedY = 4,            //掉落物速度
       count_money = 0;              //計算得分
 
-    app.view.visible = false;
-    document.getElementById('container').appendChild(app.view);
-
     PIXI.loader
       .add([
         "../images/bubao_1.png",
@@ -220,17 +217,18 @@
         "../images/fall_4.png"
       ])
       .on("progress", loadProgressHandler)
-      .load(steupfinished);
+      .load(setup);
     function loadProgressHandler(loader, resource) {
       document.getElementById('progress_percent').style.width = loader.progress + "%";
-    }
-
-    function steupfinished() {
-      console.log('finished');
+      if (loader.progress === 100) {
+        setTimeout(() => {
+          document.getElementById('progress_bar').style.display = "none";
+        }, 500);
+      }
     }
 
     function setup() {
-      app.view.visible = true;
+      app.view.visible = false;
 
       //prepare...
       //建立布寶動畫
@@ -269,8 +267,9 @@
       moneyContainer = new PIXI.Container();
       app.stage.addChild(moneyContainer);
 
-      //countdown
+      //countdown 3...2...1...Start
       countdownStart();
+
     }
 
     function update() {
@@ -375,6 +374,8 @@
           countdownStart();
         }, 1000);
       } else {
+        //顯示舞台遊戲畫面
+        document.getElementById('container').appendChild(app.view);
         startGame();
       }
     }
