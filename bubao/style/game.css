@@ -14,14 +14,14 @@ html, body {
   width: 480px;
   height: 100%;
   position: relative;
-  background-image: url('/images/index_dot_bg.png');
+  background-image: url('../../images/index_dot_bg.png');
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .progress_container {
   display: none;
-  background-image: url('/images/progress_bar_bg.png');
+  background-image: url('../../images/progress_bar_bg.png');
   background-repeat: no-repeat;
   background-size: cover;
   width: 80%;
@@ -38,7 +38,7 @@ html, body {
 
 .progress {
   position: absolute;
-  background: url('/images/progress_bar.png');
+  background: url('../../images/progress_bar.png');
   background-repeat: no-repeat;
   background-size: cover;
   top: 23%;
@@ -71,25 +71,25 @@ html, body {
 }
 
 .countdown_container.ct_3 {
-  background-image: url('/images/ct_3.png');
+  background-image: url('../../images/ct_3.png');
   width: 16%;
   padding-bottom: 19%;
 }
 
 .countdown_container.ct_3.ct_2 {
-  background-image: url('/images/ct_2.png');
+  background-image: url('../../images/ct_2.png');
   width: 16%;
   padding-bottom: 19%;
 }
 
 .countdown_container.ct_3.ct_2.ct_1 {
-  background-image: url('/images/ct_1.png');
+  background-image: url('../../images/ct_1.png');
   width: 9%;
   padding-bottom: 19%;
 }
 
 .countdown_container.ct_3.ct_2.ct_1.ct_start {
-  background-image: url('/images/text_start.png');
+  background-image: url('../../images/text_start.png');
   width: 37%;
   padding-bottom: 19%;
 }
