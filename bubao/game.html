@@ -33,6 +33,36 @@
       background-size: cover;
     }
 
+    .progress_container {
+      display: none;
+      background-image: url('../images/progress_bar_bg.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 80%;
+      padding-bottom: 10.2%;
+      margin: 0 auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .container.with_progress .progress_container{
+      display: block;
+    }
+
+    .progress {
+      position: absolute;
+      background: url('../images/progress_bar.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      top: 23%;
+      left: 3%;
+      height: 50%;
+      min-width: 3%;
+      max-width: 94%;
+    }
+
     @media(max-width:480px){
       .container {
         margin: 0 auto;
@@ -58,11 +88,12 @@
 </style>
 </head>
 <body onload="init()">
-  <div id="container" class="container">
+  <div id="container" class="container with_progress">
+    <div class="progress_container is-done">
+      <div id="progress_percent" class="progress"></div>
+    </div>
     <div class="info">
-      gamma:<span id="gamma"></span><br/>
       版本:<span id="version">6.01</span><br/>
-      log:<span id="logText"></span><br/>
       <span id="infoText"></span><br/>
     </div>
 </div>
@@ -173,7 +204,7 @@
       fallObjSpeedY = 4,            //掉落物速度
       count_money = 0;              //計算得分
 
-    app.renderer.backgroundColor = 0xde54a9;
+    app.view.visible = false;
     document.getElementById('container').appendChild(app.view);
 
     PIXI.loader
@@ -189,12 +220,18 @@
         "../images/fall_4.png"
       ])
       .on("progress", loadProgressHandler)
-      .load(setup);
+      .load(steupfinished);
     function loadProgressHandler(loader, resource) {
-      infoText.innerHTML = " Loading:  " + loader.progress + "%";
+      document.getElementById('progress_percent').style.width = loader.progress + "%";
+    }
+
+    function steupfinished() {
+      console.log('finished');
     }
 
     function setup() {
+      app.view.visible = true;
+
       //prepare...
       //建立布寶動畫
       CreateAnimatedSp();
