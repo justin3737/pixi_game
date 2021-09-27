@@ -79,22 +79,22 @@ html, body {
 
 .countdown_container.ct_3 {
   background-image: url('../../images/ct_3.png');
-  width: 16%;
+  width: 22%;
 }
 
 .countdown_container.ct_3.ct_2 {
   background-image: url('../../images/ct_2.png');
-  width: 16%;
+  width: 22%;
 }
 
 .countdown_container.ct_3.ct_2.ct_1 {
   background-image: url('../../images/ct_1.png');
-  width: 9%;
+  width: 12%;
 }
 
 .countdown_container.ct_3.ct_2.ct_1.ct_start {
   background-image: url('../../images/text_start.png');
-  width: 37%;
+  width: 47%;
 }
 
 .countdown_container.ct_3.ct_2.ct_1.ct_start.ct_remove {
