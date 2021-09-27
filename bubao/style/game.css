@@ -63,7 +63,14 @@ html, body {
   left: 50%;
   transform: translate(-50%, -50%);
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: 100%;
+  padding-bottom: 100%;
+  background-position: center;
+  transition: background-size 0.2s ease-in;
+  -moz-transition: background-size 0.2s ease-in;
+  -ms-transition: background-size 0.2s ease-in;
+  -o-transition: background-size 0.2s ease-in;
+  -webkit-transition: background-size 0.2s ease-in;
 }
 
 .container.with_progress .progress_container {
@@ -73,25 +80,21 @@ html, body {
 .countdown_container.ct_3 {
   background-image: url('../../images/ct_3.png');
   width: 16%;
-  padding-bottom: 19%;
 }
 
 .countdown_container.ct_3.ct_2 {
   background-image: url('../../images/ct_2.png');
   width: 16%;
-  padding-bottom: 19%;
 }
 
 .countdown_container.ct_3.ct_2.ct_1 {
   background-image: url('../../images/ct_1.png');
   width: 9%;
-  padding-bottom: 19%;
 }
 
 .countdown_container.ct_3.ct_2.ct_1.ct_start {
   background-image: url('../../images/text_start.png');
   width: 37%;
-  padding-bottom: 19%;
 }
 
 .countdown_container.ct_3.ct_2.ct_1.ct_start.ct_remove {
