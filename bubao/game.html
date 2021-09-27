@@ -144,7 +144,11 @@
         "../images/fall_4.png"
       ])
       .on("progress", loadProgressHandler)
-      .load(setup);
+      .load(stop);
+
+    function stop() {
+
+    }
 
     function loadProgressHandler(loader, resource) {
       document.getElementById('progress_percent').style.width = loader.progress + "%";
