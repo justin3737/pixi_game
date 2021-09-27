@@ -37,7 +37,7 @@
 
   function getAccel() {
     window.addEventListener('deviceorientation', function(event) {
-      let g = document.getElementById('gamma'),
+      let g = document.getElementById('infoText'),
       gamma = Math.round(event.gamma);
 
       g.innerHTML = gamma;
