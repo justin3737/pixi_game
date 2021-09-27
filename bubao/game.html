@@ -110,6 +110,7 @@
 
     let b = new Bump(PIXI),       //碰撞偵測
       infoText = document.getElementById('infoText'),
+      _container = document.getElementById('container'),
       app = new PIXI.Application({
         width: screenWidth,
         height: screenHeight,
@@ -133,6 +134,7 @@
 
     PIXI.loader
       .add([
+        "../images/game_bg.png",
         "../images/bubao_1.png",
         "../images/bubao_2.png",
         "../images/bubao_3.png",
@@ -141,10 +143,13 @@
         "../images/fall_1.png",
         "../images/fall_2.png",
         "../images/fall_3.png",
-        "../images/fall_4.png"
+        "../images/fall_4.png",
+        "../images/icon_game_music.png",
+        "../images/icon_game_point.png",
+        "../images/icon_game_time.png"
       ])
       .on("progress", loadProgressHandler)
-      .load(stop);
+      .load(setup);
 
     function stop() {
 
@@ -154,7 +159,6 @@
       document.getElementById('progress_percent').style.width = loader.progress + "%";
       if (loader.progress === 100) {
         setTimeout(() => {
-          var _container = document.getElementById('container');
           _container.classList.remove("with_progress");
           _container.classList.add("with_countdown");
         }, 500);
@@ -306,7 +310,9 @@
         }, 1000);
       } else {
         //顯示舞台遊戲畫面
-        document.getElementById('container').appendChild(app.view);
+        _container.classList.remove('with_countdown');
+        _container.classList.add('game_start');
+        _container.appendChild(app.view);
         startGame();
       }
     }

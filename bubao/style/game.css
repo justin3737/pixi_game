@@ -101,6 +101,10 @@ html, body {
   display: none;
 }
 
+.container.game_start {
+  background-image: url('../../images/game_bg.png');
+}
+
 .info {
   top: 60px;
   left: 30px;
