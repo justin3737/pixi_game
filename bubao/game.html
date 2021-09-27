@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bubao小遊戲</title>
   <link rel="stylesheet" href="style/game.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito">
   <script src="../pixi.min.js"></script>
   <script src="../bump.js"></script>
   <script src="../eventemitter3-timer.min.js"></script>
@@ -15,13 +16,21 @@
 </head>
 <body onload="init()">
   <div id="container" class="container with_progress">
+    <div class="game_view">
+      <div class="point_container">
+        <span id="point_text">0</span>
+      </div>
+      <div class="icon_time"></div>
+      <span id="time_text" class="time_text">15</span>
+      <div class="btn_music"></div>
+    </div>
     <div id="progress_bar" class="progress_container">
       <div id="progress_percent" class="progress"></div>
     </div>
     <div id="ct_container" class="countdown_container"></div>
     <div class="info">
       版本:<span id="version">6.01</span><br/>
-      <span id="infoText"></span><br/>
+      <span id="info_text"></span><br/>
     </div>
 </div>
 </body>
@@ -106,7 +115,9 @@
     PIXI.utils.sayHello(type);
 
     let b = new Bump(PIXI),       //碰撞偵測
-      infoText = document.getElementById('infoText'),
+      infoText = document.getElementById('info_text'),
+      timeText = document.getElementById('time_text'),
+      pointText = document.getElementById('point_text'),
       _container = document.getElementById('container'),
       app = new PIXI.Application({
         width: screenWidth,
@@ -170,16 +181,6 @@
       //加入倒數數字
       CreateCountDowntimer();
 
-      //顯示賺了多少錢
-      const style = new PIXI.TextStyle({
-        fontSize: 20,
-        fill: "white"
-      });
-      numberText = new PIXI.Text('0',style);
-      numberText.position.x = 30;
-      numberText.position.y = 30;
-      app.stage.addChild(numberText);
-
       //錢錢
       moneyTexture = PIXI.Texture.from("../images/point.png");
       //掉落物品
@@ -227,7 +228,7 @@
         if (b.hitTestCircle(obj, bubaoSp, true)) {
           moneyContainer.removeChild(obj);
           count_money += 1
-          numberText.text = count_money;
+          pointText.innerHTML = count_money;
         }
       });
 
@@ -279,11 +280,6 @@
     }
 
     function CreateCountDowntimer() {
-      const cdTxt = new PIXI.Text(countdown, {fontFamily : 'Arial', fontSize: 20, fill : 0xffffff, align : 'center' });
-      cdTxt.position.x = screenWidth - 30 - cdTxt.width;
-      cdTxt.position.y = 30;
-      app.stage.addChild(cdTxt);
-
       cdTimer = new EE3Timer.Timer(1000);
       cdTimer.repeat = countdown;
       cdTimer.on('end', elapsed => {
@@ -291,7 +287,7 @@
       });
       cdTimer.on('repeat', (elapsed, repeat) => {
         countdown --;
-        cdTxt.text = countdown;
+        timeText.innerHTML = countdown;
       });
       app.ticker.add(() => {
         cdTimer.timerManager.update(app.ticker.elapsedMS);
