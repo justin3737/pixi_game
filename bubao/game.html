@@ -284,6 +284,7 @@
       cdTimer.repeat = countdown;
       cdTimer.on('end', elapsed => {
         loop = false;
+        window.location.href = "result.html?p=" + count_money
       });
       cdTimer.on('repeat', (elapsed, repeat) => {
         countdown --;
