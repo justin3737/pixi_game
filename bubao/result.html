@@ -302,7 +302,6 @@ function init() {
     count = parseInt(parma.substr(pos+=2,1),10) || 0;
     document.getElementById('points').innerHTML = count;
     if (count <= 0) {
-      _container.classList.remove('win');
       _container.classList.add('lose')
     } else {
       _container.classList.add('win');
