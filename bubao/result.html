@@ -60,7 +60,6 @@
     .text_banner {
       position: absolute;
       width: 88%;
-      z-index: 1;
       top: 18%;
       left: 6%;
     }
@@ -172,13 +171,13 @@
 
     @media(max-height: 736px){
       .text_banner {
-        top: 17%;
+        top: 10%;
       }
 
-      .bubao_role {
+      .bubao_role.is_win, .bubao_role.is_lose {
         width: 90%;
         left: 5%;
-        top: 39%;
+        top: 32%;
       }
 
       .game_desc h2 {
@@ -187,6 +186,10 @@
 
       .btn_done {
         margin-top: 10px;
+      }
+
+      .desc {
+        z-index: 2;
       }
     }
 
@@ -261,10 +264,10 @@
 <body onload="init();">
 <div id="container" class="container">
   <div class="main">
-    <img class="bubao_role is_win" src="../images/bubao_win.png" alt="">
-    <img class="text_banner is_win" src="../images/text_win.png" alt="">
-    <img class="bubao_role is_lose" src="../images/bubao_lose.png" alt="">
-    <img class="text_banner is_lose" src="../images/text_lose.png" alt="">
+    <img class="text_banner is_win" src="../images/text_win.png" alt=""/>
+    <img class="bubao_role is_win" src="../images/bubao_win.png" alt=""/>
+    <img class="text_banner is_lose" src="../images/text_lose.png" alt=""/>
+    <img class="bubao_role is_lose" src="../images/bubao_lose.png" alt=""/>
   </div>
   <div class="desc">
     <div class="game_desc">
@@ -277,7 +280,6 @@
     </div>
     <a class="btn_done"></a>
   </div>
-
 </div>
 </body>
 <script>
