@@ -143,10 +143,6 @@
     PIXI.loader
       .add([
         "../images/game_bg.png",
-        "../images/bubao_1.png",
-        "../images/bubao_2.png",
-        "../images/bubao_3.png",
-        "../images/bubao_4.png",
         "../images/bubao_1-1.png",
         "../images/bubao_1-2.png",
         "../images/bubao_1-3.png",
@@ -240,6 +236,7 @@
         if (b.hitTestCircle(obj, bubaoSp, true)) {
           moneyContainer.removeChild(obj);
           count_money += 1
+          changeBuaboSp(count_money);
           pointText.innerHTML = count_money;
         }
       });
@@ -277,8 +274,28 @@
       }
     }
 
+    function changeBuaboSp(count) {
+      if(count >= 4) count = 4;
+      let bubaoImages = [`../images/bubao_${count}-1.png`,`../images/bubao_${count}-2.png`,`../images/bubao_${count}-3.png`,`../images/bubao_${count}-4.png`];
+      let textureArray = [];
+
+      for (let i=0; i < bubaoImages.length; i++)
+      {
+        let texture = PIXI.Texture.from(bubaoImages[i]);
+        textureArray.push(texture);
+      };
+      let bubaoX = bubaoSp.x,
+        bubaoDirection = bubaoSp.direction;
+      app.stage.removeChild(bubaoSp);
+
+      bubaoSp = new BuBao(textureArray);
+      bubaoSp.x = bubaoX;
+      bubaoSp.direction = bubaoDirection;
+      app.stage.addChild(bubaoSp);
+    }
+
     function CreateAnimatedSp() {
-      let bubaoImages = ["../images/bubao_1.png","../images/bubao_2.png","../images/bubao_3.png","../images/bubao_4.png"];
+      let bubaoImages = ["../images/bubao_1-1.png","../images/bubao_1-2.png","../images/bubao_1-3.png","../images/bubao_1-4.png"];
       let textureArray = [];
 
       for (let i=0; i < bubaoImages.length; i++)
